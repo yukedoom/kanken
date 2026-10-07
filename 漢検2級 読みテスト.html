@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>漢検2級 読みテスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #e9eeee;
+  --grid: rgba(31, 63, 115, .07);
+  --sheet: #fbfcfc;
+  --ink: #18212b;
+  --muted: #566272;
+  --indigo: #1f3f73;
+  --onindigo: #ffffff;
+  --line: #b7c3cb;
+  --pen: #d3281e;
+  --pen-bg: rgba(211, 40, 30, .07);
+  --font: "BIZ UDPGothic", "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f141a;
+    --grid: rgba(141, 176, 234, .07);
+    --sheet: #171e27;
+    --ink: #e7edf3;
+    --muted: #9aa7b6;
+    --indigo: #8db0ea;
+    --onindigo: #0f141a;
+    --line: #334150;
+    --pen: #ff6a5c;
+    --pen-bg: rgba(255, 106, 92, .1);
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f141a;
+  --grid: rgba(141, 176, 234, .07);
+  --sheet: #171e27;
+  --ink: #e7edf3;
+  --muted: #9aa7b6;
+  --indigo: #8db0ea;
+  --onindigo: #0f141a;
+  --line: #334150;
+  --pen: #ff6a5c;
+  --pen-bg: rgba(255, 106, 92, .1);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--ink);
+  font-family: var(--font);
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding: 24px 16px 56px; }
+[hidden] { display: none !important; }
+
+/* ---------- hero ---------- */
+.hero { margin-bottom: 26px; }
+.title {
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid var(--indigo);
+  color: var(--indigo);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .7rem;
+  line-height: 1.3;
+}
+.title .t1 { font-size: clamp(2.1rem, 9vw, 3rem); font-weight: 700; letter-spacing: .06em; }
+.title .t2 { font-size: clamp(1.1rem, 4.2vw, 1.4rem); font-weight: 400; letter-spacing: .12em; }
+.hero-body { padding: 0; }
+.hero-body p { margin: 0 0 10px; max-width: 34em; }
+.sample {
+  font-family: var(--font);
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  font-size: 1.05rem;
+}
+.sample small { display: block; font-family: var(--font); color: var(--muted); font-size: .8rem; margin-top: 2px; }
+.t { font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+
+/* ---------- sheet / buttons ---------- */
+.sheet { background: var(--sheet); border: 2px solid var(--indigo); }
+.pad { padding: 18px 18px 22px; }
+fieldset { border: 0; margin: 0 0 20px; padding: 0; min-width: 0; }
+legend { padding: 0; margin-bottom: 8px; font-weight: 700; color: var(--indigo); }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt { position: relative; }
+.opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.opt span {
+  display: inline-block;
+  border: 1.5px solid var(--indigo);
+  border-radius: 2px;
+  padding: 7px 14px;
+  font-weight: 400;
+  color: var(--ink);
+  background: transparent;
+}
+.opt small { color: var(--muted); margin-left: 6px; font-size: .78rem; }
+.opt input:checked + span { background: var(--indigo); color: var(--onindigo); }
+.opt input:checked + span small { color: inherit; opacity: .85; }
+.opt input:focus-visible + span { outline: 3px solid var(--indigo); outline-offset: 2px; }
+.opt input:disabled + span { opacity: .45; border-style: dashed; }
+.opt input:disabled { cursor: not-allowed; }
+.check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--indigo); }
+.btn {
+  font: inherit;
+  font-weight: 700;
+  border: 2px solid var(--indigo);
+  background: transparent;
+  color: var(--indigo);
+  padding: 11px 22px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.btn:hover { background: color-mix(in srgb, var(--indigo) 10%, transparent); }
+.btn.primary { background: var(--indigo); color: var(--onindigo); }
+.btn.primary:hover { filter: brightness(1.08); background: var(--indigo); }
+.btn:focus-visible, .linkbtn:focus-visible, .q input:focus-visible { outline: 3px solid var(--indigo); outline-offset: 2px; }
+.btn.block { width: 100%; font-size: 1.05rem; padding: 14px; }
+.note { color: var(--muted); font-size: .86rem; margin: 14px 0 0; }
+.warn { color: var(--pen); font-weight: 700; margin: 10px 0 0; }
+.linkbtn { font: inherit; background: none; border: 0; color: var(--indigo); text-decoration: underline; cursor: pointer; padding: 4px 2px; }
+
+/* ---------- test ---------- */
+.bar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: var(--sheet);
+  border-bottom: 2px solid var(--indigo);
+  padding: 8px 14px 0;
+}
+.bar-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bar b { font-family: var(--font); font-size: 1.1rem; }
+.prog { height: 4px; margin: 8px -14px 0; background: var(--line); }
+.prog i { display: block; height: 100%; width: 0; background: var(--indigo); transition: width .15s; }
+ol.qs { list-style: none; margin: 0; padding: 0; }
+.q, .r { display: grid; grid-template-columns: 3rem 1fr; border-top: 1px solid var(--line); scroll-margin: 5rem 0 7rem; }
+.q:first-child, .r:first-child { border-top: 0; }
+.no {
+  grid-column: 1; grid-row: 1 / span 2;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding-top: 13px;
+  border-right: 1px solid var(--line);
+  font-family: var(--font); font-weight: 700; color: var(--indigo);
+}
+.s {
+  grid-column: 2;
+  margin: 0;
+  padding: 12px 14px 6px;
+  font-family: var(--font);
+  font-size: 1.15rem; line-height: 1.95;
+}
+.ans { grid-column: 2; padding: 0 14px 14px; }
+.q input {
+  width: 100%;
+  font: inherit; font-size: 18px; color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 2px;
+  padding: 10px 12px;
+}
+.q input::placeholder { color: var(--muted); opacity: .7; font-size: 15px; }
+.q input:focus { border-color: var(--indigo); background: var(--sheet); }
+.q.filled .no { background: color-mix(in srgb, var(--indigo) 9%, transparent); }
+.submit {
+  position: sticky; bottom: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  background: var(--sheet);
+  border-top: 2px solid var(--indigo);
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.submit .msg { margin: 0; font-size: .9rem; color: var(--muted); }
+.submit .msg.warn { color: var(--pen); }
+
+@media (min-width: 640px) {
+  .q, .r { grid-template-columns: 3.4rem 1fr 15rem; }
+  .no { grid-row: auto; }
+  .s { padding: 14px; }
+  .ans { grid-column: 3; padding: 0; border-left: 1px solid var(--line); display: flex; }
+  .q input { flex: 1; height: 100%; min-height: 58px; border: 0; padding: 0 14px; background: transparent; }
+  .q input:focus { background: var(--paper); outline-offset: -3px; }
+  .q input:focus-visible { outline-offset: -3px; }
+}
+
+/* ---------- result ---------- */
+.summary { text-align: center; padding: 30px 16px 26px; border-bottom: 2px solid var(--indigo); }
+.score { position: relative; display: inline-block; padding: 20px 44px; margin-bottom: 8px; }
+.score svg { position: absolute; left: -10px; top: -4px; width: calc(100% + 20px); height: calc(100% + 8px); overflow: visible; fill: none; stroke: var(--pen); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.score svg path { animation: draw .9s ease-out .1s both; }
+@keyframes draw { from { stroke-dashoffset: var(--len, 1000); } to { stroke-dashoffset: 0; } }
+.score .num { position: relative; font-family: var(--font); font-weight: 700; font-size: clamp(2.8rem, 12vw, 4.2rem); line-height: 1.1; color: var(--pen); }
+.score .num small { font-size: .42em; font-weight: 400; margin-left: .15em; }
+.summary p { margin: 6px 0 0; }
+.summary .pct { font-weight: 700; font-size: 1.1rem; }
+.summary .small { color: var(--muted); font-size: .85rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px; border-bottom: 1px solid var(--line); }
+.review-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--paper); }
+.r.ng { background: var(--pen-bg); }
+.mark { font-family: var(--font); font-weight: 700; font-size: 1.9rem; line-height: 1; color: var(--pen); }
+.r .s { grid-row: 1; padding-bottom: 4px; }
+.r .tag { display: inline-block; margin-left: 8px; font-family: var(--font); font-size: .72rem; color: var(--muted); border: 1px solid var(--line); padding: 0 6px; vertical-align: middle; }
+.r .ans { display: block; padding: 0 14px 14px; }
+.r .ans div { line-height: 1.5; }
+.r .lbl { color: var(--muted); font-size: .76rem; margin-right: 6px; }
+.r .val { font-size: 1.1rem; font-weight: 400; }
+.r .right { margin-top: 4px; color: var(--pen); font-weight: 700; }
+.r .right .val { font-weight: 700; font-size: 1.15rem; }
+@media (min-width: 640px) {
+  .r .s { grid-row: auto; padding-bottom: 14px; }
+  .r .ans { padding: 14px; border-left: 1px solid var(--line); }
+}
+/* ---------- 記録の引き継ぎ ---------- */
+.xfer { margin-top: 18px; background: var(--sheet); border: 2px solid var(--indigo); }
+.xfer > summary { cursor: pointer; padding: 12px 16px; font-weight: 700; color: var(--indigo); }
+.xfer > summary:focus-visible { outline: 3px solid var(--indigo); outline-offset: -3px; }
+.xfer-body { padding: 4px 16px 18px; border-top: 1px solid var(--line); }
+.xfer h3 { margin: 18px 0 6px; font-size: 1rem; color: var(--indigo); }
+.xfer .lbl { display: block; font-size: .9rem; margin-bottom: 4px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.info { margin: 4px 0 8px; font-size: .92rem; min-height: 1.4em; }
+.okmsg { color: var(--indigo); font-weight: 700; }
+textarea.code {
+  display: block; width: 100%; resize: vertical;
+  font: 16px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  word-break: break-all;
+  color: var(--ink); background: var(--paper);
+  border: 1.5px solid var(--line); border-radius: 2px; padding: 10px 12px;
+}
+textarea.code:focus { outline: 3px solid var(--indigo); outline-offset: 1px; border-color: var(--indigo); }
+.acts { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 4px; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:disabled:hover { background: transparent; }
+.btn.primary:disabled:hover { background: var(--indigo); filter: none; }
+@media (prefers-reduced-motion: reduce) {
+  .score svg path { animation: none; }
+  .prog i { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 開始画面 ===== -->
+  <main id="start">
+    <header class="hero">
+      <h1 class="title"><span class="t1">漢検二級</span><span class="t2">読みテスト</span></h1>
+      <div class="hero-body">
+        <p>文中の<span class="t">下線部</span>の読みを、テキストボックスに入力して答えます。全<b id="totalCount">0</b>問を収録。</p>
+        <div class="sample">例　近所の人と朝の<span class="t">挨拶</span>を交わす。<small>→「あいさつ」と入力</small></div>
+      </div>
+    </header>
+
+    <div class="sheet pad">
+      <fieldset>
+        <legend>出題範囲</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="scope" value="all" checked><span>すべて<small id="c-all"></small></span></label>
+          <label class="opt"><input type="radio" name="scope" value="on"><span>音読みの熟語<small id="c-on"></small></span></label>
+          <label class="opt"><input type="radio" name="scope" value="kun"><span>訓読み・送り仮名<small id="c-kun"></small></span></label>
+          <label class="opt"><input type="radio" name="scope" value="sp"><span>熟字訓・特殊な読み<small id="c-sp"></small></span></label>
+          <label class="opt"><input type="radio" name="scope" value="weak" id="weakRadio"><span>苦手だけ<small id="c-weak"></small></span></label>
+        </div>
+        <p class="note" id="doneNote" style="margin-top:10px"></p>
+        <button class="linkbtn" id="resetBtn" type="button" hidden>正解済みの記録をリセット</button>
+      </fieldset>
+      <fieldset>
+        <legend>問題数</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="count" value="10"><span>10問</span></label>
+          <label class="opt"><input type="radio" name="count" value="30" checked><span>30問<small>本番と同じ</small></span></label>
+          <label class="opt"><input type="radio" name="count" value="50"><span>50問</span></label>
+          <label class="opt"><input type="radio" name="count" value="100"><span>100問</span></label>
+          <label class="opt"><input type="radio" name="count" value="all"><span>全問</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <label class="check"><input type="checkbox" id="shuffle" checked>順番をシャッフルする</label>
+      </fieldset>
+      <button class="btn primary block" id="startBtn" type="button">テストを始める</button>
+      <p class="warn" id="startMsg" hidden></p>
+      <p class="note">答えは「ひらがな」で入力します（カタカナや全角・半角は自動で補正）。変換を確定してからEnterを押すと、次の問題へ移ります。各範囲の数字は、まだ出題していない問題の数です。一度正解した問題は出題されません。まちがえた問題は「苦手」として記録され、「苦手だけ」を選んだときに出題されます（記録はこのブラウザに保存されます）。</p>
+    </div>
+
+    <details class="xfer" id="xfer">
+      <summary>記録の引き継ぎ（別の端末に移す）</summary>
+      <div class="xfer-body">
+        <p class="note">「正解済み」と「苦手」の記録を、文字だけの<b>引き継ぎコード</b>にして別の端末へ移せます。書き出し側でコードをコピーし、読み込み側の欄に貼り付けてください。</p>
+        <p class="warn" id="storeWarn" hidden>このブラウザでは記録を保存できないため、ページを閉じると記録が消えます。必要なら、先にコードを書き出してください。</p>
+
+        <h3>この端末の記録を書き出す</h3>
+        <p id="expInfo" class="info"></p>
+        <label class="sr" for="expCode">引き継ぎコード（書き出し用）</label>
+        <textarea class="code" id="expCode" rows="4" readonly spellcheck="false" autocomplete="off"></textarea>
+        <div class="acts"><button class="btn" id="copyBtn" type="button">コードをコピー</button></div>
+        <p class="info" id="copyMsg" role="status" aria-live="polite"></p>
+
+        <h3>別の端末の記録を読み込む</h3>
+        <label class="lbl" for="impCode">引き継ぎコードを貼り付け</label>
+        <textarea class="code" id="impCode" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="kk2.1. で始まるコードを貼り付け"></textarea>
+        <p class="info" id="impInfo" role="status" aria-live="polite"></p>
+        <div class="acts">
+          <button class="btn primary" id="mergeBtn" type="button" disabled>統合して読み込む</button>
+          <button class="btn" id="replaceBtn" type="button" disabled>置き換えて読み込む</button>
+        </div>
+        <p class="note"><b>統合</b>：今の記録を残したまま、コードの記録を足します。同じ問題で結果が食い違うときは、新しく解いた方を採用します（おすすめ）。<br><b>置き換え</b>：今の記録をすべて消して、コードの内容だけにします。</p>
+      </div>
+    </details>
+  </main>
+
+  <!-- ===== テスト画面 ===== -->
+  <main id="test" hidden>
+    <div class="sheet">
+      <div class="bar">
+        <div class="bar-row">
+          <div>回答 <b id="answered">0</b> / <b id="total">0</b></div>
+          <button class="linkbtn" id="quitBtn" type="button">中断する</button>
+        </div>
+        <div class="prog"><i id="progBar"></i></div>
+      </div>
+      <ol class="qs" id="qlist"></ol>
+      <div class="submit">
+        <p class="msg" id="submitMsg">すべて答えたら採点します。</p>
+        <button class="btn primary" id="gradeBtn" type="button">採点する</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== 結果画面 ===== -->
+  <main id="result" hidden>
+    <div class="sheet">
+      <div class="summary" id="summary"></div>
+      <div class="actions">
+        <button class="btn primary" id="againBtn" type="button">同じ条件で続ける</button>
+        <button class="btn" id="homeBtn" type="button">最初に戻る</button>
+      </div>
+      <div class="review-head">
+        <strong>答え合わせ</strong>
+        <label class="check"><input type="checkbox" id="onlyWrong">まちがいだけ表示</label>
+      </div>
+      <ol class="qs" id="rlist"></ol>
+    </div>
+  </main>
+
+</div>
+
+<script>
+(function () {
+'use strict';
+
+/* ================= 問題データ =================
+   書式: "問題文（出題部分を【】で囲む）|正解|別解…" */
+
+// 音読みの熟語
+const ON = [
+"近所の人と朝の【挨拶】を交わす。|あいさつ",
+"【曖昧】な返事では相手も困るだろう。|あいまい",
+"偉大な先人に【畏敬】の念を抱く。|いけい",
+"緊張のあまり【萎縮】してしまった。|いしゅく",
+"辞書を引いて【語彙】を増やす。|ごい",
+"風邪で【咽喉】が腫れている。|いんこう",
+"雨続きで【憂鬱】な毎日だ。|ゆううつ",
+"【怨恨】による犯行とみられる。|えんこん",
+"子どもは好奇心が【旺盛】だ。|おうせい",
+"彼は【臆病】な性格で知られる。|おくびょう",
+"【苛酷】な環境を耐え抜いた。|かこく",
+"履歴書を【楷書】で丁寧に書く。|かいしょ",
+"【諧謔】に富んだ演説に会場が沸いた。|かいぎゃく",
+"理科室の【骸骨】の模型が怖かった。|がいこつ",
+"人間関係の【葛藤】に悩む。|かっとう",
+"【玩具】売り場は親子連れで混雑している。|がんぐ",
+"地震で地面に【亀裂】が走った。|きれつ",
+"【畿内】は古代日本の中枢だった。|きない",
+"名誉【毀損】で告訴された。|きそん",
+"犬は【嗅覚】が非常に鋭い。|きゅうかく",
+"勝敗は【僅少】の差で決まった。|きんしょう",
+"環境破壊の進行を【危惧】する。|きぐ",
+"探検隊が【洞窟】の奥へ進む。|どうくつ",
+"彼は古代史に【造詣】が深い。|ぞうけい",
+"長年、都会生活への【憧憬】を抱いていた。|しょうけい|どうけい",
+"道場で毎日【稽古】に励む。|けいこ",
+"建物の【間隙】から光が差し込む。|かんげき",
+"転倒して【股関節】を痛めた。|こかんせつ",
+"被告に【禁錮】三年の判決が下った。|きんこ",
+"【勾配】のきつい坂道を上る。|こうばい",
+"論文の【梗概】を提出する。|こうがい",
+"彼の【傲慢】な態度に腹が立つ。|ごうまん",
+"現場に残された【痕跡】を調べる。|こんせき",
+"事を荒立てて警察【沙汰】にはしたくない。|ざた",
+"資金難で計画が【挫折】した。|ざせつ",
+"【要塞】を築いて敵に備える。|ようさい",
+"【斬新】なデザインが注目を集めた。|ざんしん",
+"【恣意】的な運用は許されない。|しい",
+"【真摯】な態度で謝罪した。|しんし",
+"上司から厳しく【叱責】された。|しっせき",
+"同僚の昇進を【嫉妬】する。|しっと",
+"検査で【腫瘍】が見つかった。|しゅよう",
+"古い慣習の【呪縛】から逃れる。|じゅばく",
+"【羞恥】心から顔が赤くなった。|しゅうち",
+"【腎臓】の機能が低下している。|じんぞう",
+"水は生命の維持に【必須】だ。|ひっす",
+"【凄絶】な戦いが繰り広げられた。|せいぜつ",
+"麻酔から【覚醒】する。|かくせい",
+"事故で【脊髄】を損傷した。|せきずい",
+"正月に【親戚】が集まる。|しんせき",
+"客に【煎茶】をいれる。|せんちゃ",
+"周囲の【羨望】の的となる。|せんぼう",
+"【甲状腺】の病気を治療する。|こうじょうせん",
+"他人の事情を【詮索】するな。|せんさく",
+"【便箋】に近況をしたためる。|びんせん",
+"食事の【配膳】を手伝う。|はいぜん",
+"【曽祖父】は明治生まれだった。|そうそふ",
+"【爽快】な気分で目覚めた。|そうかい",
+"近所の青年が突然【失踪】した。|しっそう",
+"彼女は褒め言葉を【謙遜】して受け流した。|けんそん",
+"不要な部署が【淘汰】された。|とうた",
+"【唾液】には消化を助ける働きがある。|だえき",
+"川底に土砂が【堆積】する。|たいせき",
+"会社の経営が【破綻】した。|はたん",
+"【緻密】な計画を立てる。|ちみつ",
+"【焼酎】を水で割って飲む。|しょうちゅう",
+"他人の失敗を【嘲笑】してはいけない。|ちょうしょう",
+"【脊椎】動物の特徴を学ぶ。|せきつい",
+"赤字を【補塡】する。|ほてん",
+"【賭博】は法律で禁じられている。|とばく",
+"周囲の状況に【頓着】しない。|とんちゃく|とんじゃく",
+"新しい知識を【貪欲】に吸収する。|どんよく",
+"転んで足首を【捻挫】した。|ねんざ",
+"相手を激しく【罵倒】する。|ばとう",
+"市民としての権利を【剝奪】される。|はくだつ",
+"豪雨で川が【氾濫】した。|はんらん",
+"【汎用】性の高いソフトを導入する。|はんよう",
+"皮膚に赤い【斑点】が現れる。|はんてん",
+"恩師の【訃報】に接した。|ふほう",
+"不祥事を【隠蔽】しようとした。|いんぺい",
+"彼の演技は【完璧】だった。|かんぺき",
+"弱者を【侮蔑】してはならない。|ぶべつ",
+"【哺乳】類は子を乳で育てる。|ほにゅう",
+"【美貌】で知られる女優。|びぼう",
+"隣国と【和睦】を結ぶ。|わぼく",
+"突然、戦争が【勃発】した。|ぼっぱつ",
+"休日は読書【三昧】で過ごした。|ざんまい",
+"故人の【冥福】を祈る。|めいふく",
+"【冶金】技術が飛躍的に発展した。|やきん",
+"【比喩】を用いて説明する。|ひゆ",
+"【妖精】が出てくる童話を読む。|ようせい",
+"胃【潰瘍】の治療を受ける。|かいよう",
+"【肥沃】な土地が広がっている。|ひよく",
+"誘拐犯が人質を【拉致】した。|らち",
+"【辛辣】な批評を浴びる。|しんらつ",
+"恐ろしい光景に【戦慄】が走った。|せんりつ",
+"生涯の【伴侶】を得る。|はんりょ",
+"【明瞭】な発音で話す。|めいりょう",
+"【賄賂】を受け取った疑いがある。|わいろ",
+"運命に【翻弄】される。|ほんろう",
+"【山麓】に小さな町がある。|さんろく",
+"【椅子】に腰かけて待つ。|いす",
+"古い神社に【参詣】する。|さんけい",
+"長年続いた組織が【瓦解】した。|がかい",
+"敵の【牙城】を崩す。|がじょう",
+"【語呂】合わせで年号を覚える。|ごろ",
+"相手を【軽蔑】のまなざしで見る。|けいべつ",
+"両社は【蜜月】の関係にある。|みつげつ",
+"【麺類】が大好物だ。|めんるい",
+"寺の【僧侶】が読経する。|そうりょ",
+"会員同士の【親睦】を深める。|しんぼく",
+"【元旦】に初詣に出かける。|がんたん",
+"新王の【戴冠】式が行われた。|たいかん",
+"法律を過去に【遡及】して適用する。|そきゅう",
+"要人が何者かに【狙撃】された。|そげき",
+"社会に【閉塞】感が漂っている。|へいそく",
+"【拳銃】の不法所持で逮捕された。|けんじゅう",
+"巧みな話術で相手を【籠絡】する。|ろうらく",
+"外国人を【排斥】する風潮に反対する。|はいせき",
+"規則を【遵守】する。|じゅんしゅ",
+"【暫定】的な措置をとる。|ざんてい",
+"疑念を完全に【払拭】する。|ふっしょく",
+"【惰性】で毎日を過ごす。|だせい",
+"反対派を【粛清】する。|しゅくせい",
+"一週間の自宅【謹慎】を命じられた。|きんしん",
+"自由を【享受】する。|きょうじゅ",
+"【頻繁】に連絡を取り合う。|ひんぱん",
+"長年の【弊害】が表面化した。|へいがい",
+"ネズミは病原菌を【媒介】する。|ばいかい",
+"不当に身柄を【拘束】される。|こうそく",
+"安全性への【懸念】を表明する。|けねん|けんねん",
+"【陳腐】な表現ばかりで退屈だ。|ちんぷ",
+"動作が【緩慢】で見ていられない。|かんまん",
+"住民の声に【傾聴】する。|けいちょう",
+"単身で地方に【赴任】する。|ふにん",
+"生活が【堕落】する。|だらく",
+"兄に【酷似】している。|こくじ",
+"任務を最後まで【遂行】する。|すいこう",
+"【拙劣】な作戦で大敗した。|せつれつ",
+"【窃盗】の疑いで逮捕された。|せっとう",
+"【綿密】な調査を行う。|めんみつ",
+"双方が【妥協】点を探る。|だきょう",
+"両親を【扶養】する。|ふよう",
+"不正に【嫌悪】感を抱く。|けんお",
+"【享楽】的な生活を送る。|きょうらく",
+"持病の【疾患】を抱えている。|しっかん",
+"恩師の【薫陶】を受けて育った。|くんとう",
+"元首相の【逝去】が報じられた。|せいきょ",
+"友人代表として【弔辞】を読んだ。|ちょうじ",
+"【匿名】で寄付をする。|とくめい",
+"神仏を【崇拝】する。|すうはい",
+"踏切の【遮断】機が下りる。|しゃだん",
+"【迅速】な対応に感謝する。|じんそく",
+"【陪審】員が評決を下す。|ばいしん",
+"【架空】の人物を主人公にした小説。|かくう",
+"新しい工場が【稼働】を始めた。|かどう",
+"素材をよく【吟味】して選ぶ。|ぎんみ",
+"事件の【渦中】にある人物。|かちゅう",
+"チームの士気を【鼓舞】する。|こぶ",
+"【顕著】な効果が現れた。|けんちょ",
+"【懇親】会で旧友と再会した。|こんしん",
+"事実を【誇張】して話す。|こちょう",
+"外出時は必ず【施錠】する。|せじょう",
+"土地を【譲渡】する。|じょうと",
+"【嘱託】職員として働く。|しょくたく",
+"【粗雑】な仕事ぶりを叱られた。|そざつ",
+"【租税】を納めるのは国民の義務だ。|そぜい",
+"長い闘病生活を【克服】した。|こくふく",
+"【荘厳】な雰囲気の大聖堂。|そうごん",
+"結論を出すのは時期【尚早】だ。|しょうそう",
+"生産量が年々【逓減】している。|ていげん",
+"責任者が【更迭】された。|こうてつ",
+"名簿から名前を【抹消】する。|まっしょう",
+"規制を【撤廃】する。|てっぱい",
+"議論が【紛糾】して結論が出ない。|ふんきゅう",
+"資金集めに【奔走】する。|ほんそう",
+"【抑揚】をつけて朗読する。|よくよう",
+"工場排水で河川の【汚濁】が進む。|おだく",
+"美しい音色に【陶酔】する。|とうすい",
+"【淡泊】な味付けを好む。|たんぱく",
+"自然への【畏怖】の念を忘れない。|いふ",
+"他人を【愚弄】してはいけない。|ぐろう",
+"人工衛星の【軌跡】を追う。|きせき",
+"相手の顔をじっと【凝視】する。|ぎょうし",
+"【煩雑】な手続きに疲れた。|はんざつ",
+"不正を働いた社員に【懲戒】処分を下す。|ちょうかい",
+"祖父が【還暦】を迎えた。|かんれき",
+"不当な判定に【憤慨】する。|ふんがい",
+"民衆を【扇動】する。|せんどう",
+"【窮屈】な靴で足が痛い。|きゅうくつ",
+"【頑固】な性格で知られている。|がんこ",
+"【蛍光】灯が切れた。|けいこう",
+"お言葉に甘えて【頂戴】します。|ちょうだい",
+"【庶務】課に書類を提出する。|しょむ",
+"状況を正確に【把握】する。|はあく",
+"権限を【濫用】してはならない。|らんよう",
+"消火活動中に【殉職】した。|じゅんしょく",
+"資料を無料で【頒布】する。|はんぷ",
+"国王への【謁見】を許される。|えっけん",
+"地域社会に【貢献】する。|こうけん",
+"【湿潤】な気候の地域。|しつじゅん",
+"【慶弔】休暇を取得する。|けいちょう",
+"店内は落ち着いた【雰囲気】だ。|ふんいき",
+"森の中に【芳香】が漂う。|ほうこう",
+"傷口に【軟膏】を塗る。|なんこう",
+"労働者を【搾取】する。|さくしゅ",
+"彼は英語に【堪能】だ。|たんのう|かんのう",
+"【稚拙】な文章を推敲する。|ちせつ",
+"支払いが【遅滞】している。|ちたい",
+"液体の底に不純物が【沈殿】する。|ちんでん",
+"経過を【逐一】報告する。|ちくいち",
+"先生が答案を【添削】する。|てんさく",
+"敵情を【偵察】する。|ていさつ",
+"大声で相手を【威嚇】する。|いかく",
+"技を【錬磨】する。|れんま",
+"【患部】を冷やす。|かんぶ",
+"【羅針盤】を頼りに航海する。|らしんばん",
+"反対派に【懐柔】策を講じる。|かいじゅう",
+"【凡例】を参照して使い方を確認する。|はんれい",
+"要点を【概括】して述べる。|がいかつ",
+"主張の【矛盾】を指摘する。|むじゅん",
+"【潜在】能力を引き出す。|せんざい"
+];
+
+// 訓読み・送り仮名（答えは送り仮名を含めて入力）
+const KUN = [
+"【嵐】が過ぎ去るのを待つ。|あらし",
+"手紙の【宛先】を確かめる。|あてさき",
+"【艶】のある黒髪。|つや",
+"【瓦】屋根の古い家。|かわら",
+"面目を【潰す】。|つぶす",
+"【崖】の上に立つ。|がけ",
+"鍋の【蓋】を取る。|ふた",
+"庭の【柿】が熟した。|かき",
+"【顎】を引いて背筋を伸ばす。|あご",
+"【釜】でご飯を炊く。|かま",
+"草を【鎌】で刈る。|かま",
+"野犬が【牙】をむく。|きば",
+"石【臼】で粉をひく。|うす",
+"故郷に【錦】を飾る。|にしき",
+"【僅か】な差で負けた。|わずか",
+"肉を【串】に刺して焼く。|くし",
+"山で【熊】に出くわした。|くま",
+"力の差は【桁】違いだ。|けた",
+"怒りで【拳】を握りしめる。|こぶし",
+"家の【鍵】を失くした。|かぎ",
+"風邪で【喉】が痛い。|のど",
+"神に救いを【乞う】。|こう",
+"将棋の【駒】を進める。|こま",
+"子供の【頃】の思い出。|ころ",
+"板で穴を【塞ぐ】。|ふさぐ",
+"牧場の【柵】を乗り越える。|さく",
+"金魚に【餌】をやる。|えさ",
+"森で野生の【鹿】を見かけた。|しか",
+"弟を厳しく【叱る】。|しかる",
+"新しい上着に【袖】を通す。|そで",
+"ボールを力いっぱい【蹴る】。|ける",
+"都会の暮らしに【憧れる】。|あこがれる",
+"こぼれた涙を【拭う】。|ぬぐう",
+"椅子から【尻】を上げる。|しり",
+"鉛筆の【芯】が折れた。|しん",
+"ズボンの【裾】を上げる。|すそ",
+"【凄い】迫力に圧倒された。|すごい",
+"友人の幸運を【羨む】。|うらやむ",
+"獲物を【狙う】。|ねらう",
+"歴史を【遡る】。|さかのぼる",
+"病気で体が【痩せる】。|やせる",
+"問題の本質を【捉える】。|とらえる",
+"先生から賞状を【戴く】。|いただく",
+"封筒に切手を【貼る】。|はる",
+"作業が思うように【捗る】。|はかどる",
+"伸びた【爪】を切る。|つめ",
+"湖畔に【鶴】が舞い降りた。|つる",
+"夢を【諦める】。|あきらめる",
+"川で【溺れる】。|おぼれる",
+"人の成功を【妬む】。|ねたむ",
+"春になると【藤】の花が咲く。|ふじ",
+"赤ちゃんの澄んだ【瞳】。|ひとみ",
+"大きな【丼】にご飯をよそう。|どんぶり",
+"【梨】の皮をむく。|なし",
+"事件の【謎】を解く。|なぞ",
+"冬は【鍋】料理に限る。|なべ",
+"花の甘い【匂い】が漂う。|におい",
+"雨上がりの空に【虹】がかかる。|にじ",
+"壁のポスターを【剝がす】。|はがす",
+"【箸】の持ち方を直す。|はし",
+"困って【眉】をひそめる。|まゆ",
+"【膝】を抱えて座る。|ひざ",
+"机に【肘】をつく。|ひじ",
+"正月に【餅】をつく。|もち",
+"夏の庭で【蜂】に刺された。|はち",
+"恥ずかしさで【頬】を赤らめる。|ほお",
+"【枕】元に目覚まし時計を置く。|まくら",
+"ミツバチが花の【蜜】を集める。|みつ",
+"【闇】に紛れて逃げる。|やみ",
+"山の麓で温泉が【湧く】。|わく",
+"一日中部屋に【籠もる】。|こもる",
+"【脇】腹が痛む。|わき",
+"古い神社に【詣でる】。|もうでる",
+"犬が地面の匂いを【嗅ぐ】。|かぐ",
+"目が赤く【腫れる】。|はれる",
+"本にしおりを【挟む】。|はさむ",
+"学校の【傍ら】で見守る。|かたわら",
+"失敗を深く【悔やむ】。|くやむ",
+"相手を【侮る】な。|あなどる",
+"身分を【偽る】。|いつわる",
+"敵の目を【欺く】。|あざむく",
+"世の中の乱れを【嘆く】。|なげく",
+"長く病を【患う】。|わずらう",
+"注意を【怠る】。|おこたる",
+"子を【慈しむ】親心。|いつくしむ",
+"【恭しい】態度で一礼する。|うやうやしい",
+"【著しい】進歩を遂げた。|いちじるしい",
+"【甚だしい】誤解を受けた。|はなはだしい",
+"【潔い】態度で責任を認める。|いさぎよい",
+"平和を【脅かす】行為だ。|おびやかす",
+"支払いが【滞る】。|とどこおる",
+"行く手を【阻む】壁。|はばむ",
+"手みやげを【携える】。|たずさえる",
+"長い年月をかけて力を【培う】。|つちかう",
+"いい香りが【漂う】。|ただよう",
+"責任を【免れる】。|まぬかれる",
+"部下の労を【労う】。|ねぎらう",
+"自らの慢心を【戒める】。|いましめる",
+"思わぬ窮地に【陥る】。|おちいる",
+"戦地に【赴く】。|おもむく",
+"【趣】のある庭園を歩く。|おもむき",
+"カーテンで視界を【遮る】。|さえぎる",
+"過分なお言葉を【賜る】。|たまわる",
+"【懐かしい】故郷の景色。|なつかしい",
+"雨で大地が【潤う】。|うるおう",
+"今回の成績は【芳しく】ない。|かんばしく",
+"レモンの汁を【搾る】。|しぼる",
+"古い木の橋が【朽ちる】。|くちる",
+"【拙い】文章で恥ずかしい。|つたない",
+"自分の行いを【愚か】だと感じる。|おろか",
+"工夫を【凝らす】。|こらす",
+"【煩わしい】人間関係を避ける。|わずらわしい",
+"いたずらをした子を【懲らしめる】。|こらしめる",
+"【緩やか】な坂道が続く。|ゆるやか",
+"夕焼けで空が赤みを【帯びる】。|おびる",
+"毎日体を【鍛える】。|きたえる",
+"他国の領土を【侵す】。|おかす",
+"危険を【冒す】。|おかす",
+"【概ね】良好な結果だ。|おおむね",
+"【暁】の空が白んでくる。|あかつき",
+"【宵】の口から雨が降り出した。|よい",
+"上司に【媚びる】。|こびる",
+"一日中惰眠を【貪る】。|むさぼる",
+"【卑しい】考えを抱く。|いやしい",
+"失敗した人を【嘲る】。|あざける",
+"人の心を【弄ぶ】。|もてあそぶ",
+"自分の運命を【呪う】。|のろう",
+"物陰に【潜む】。|ひそむ",
+"糸を【紡ぐ】。|つむぐ",
+"一本の川が二つの町を【隔てる】。|へだてる",
+"暗殺を【謀る】。|はかる",
+"議案を委員会に【諮る】。|はかる",
+"亡くなった人を【弔う】。|とむらう",
+"命を【賭ける】覚悟で挑む。|かける",
+"信念を【貫く】。|つらぬく",
+"長い時間を【費やす】。|ついやす",
+"気力が【萎える】。|なえる",
+"視線を【逸らす】。|そらす",
+"小売店に商品を【卸す】。|おろす",
+"目の【粗い】網で魚をすくう。|あらい",
+"破れた服を【繕う】。|つくろう",
+"難関に【挑む】。|いどむ",
+"判決を【覆す】。|くつがえす",
+"前言を【翻す】。|ひるがえす",
+"国の将来を【憂える】。|うれえる",
+"不正に【憤る】。|いきどおる",
+"悲願を【遂げる】。|とげる",
+"【巧み】な話術で人を引きつける。|たくみ",
+"庭の【垣根】を直す。|かきね",
+"【猿】も木から落ちる。|さる",
+"朝、【鶏】が鳴く。|にわとり",
+"沖に【鯨】の姿を見つけた。|くじら",
+"ストーブ用の【薪】を割る。|まき",
+"朝【霜】が降りた。|しも",
+"川の【堤】を歩く。|つつみ",
+"水が【渦】を巻いて流れる。|うず",
+"畑に【畝】を作る。|うね",
+"壁の【隙】から風が入る。|すき",
+"犬を【鎖】でつなぐ。|くさり",
+"頭に【冠】をかぶる。|かんむり",
+"【沼】のほとりで釣りをする。|ぬま",
+"【繭】から糸を取る。|まゆ",
+"【泥】だらけの靴を洗う。|どろ",
+"川の浅い【瀬】を歩いて渡る。|せ",
+"【軒】先に風鈴を吊るす。|のき",
+"屋根の【梁】を補強する。|はり"
+];
+
+// 熟字訓・特殊な読み
+const SP = [
+"夜の【五月雨】に傘をさす。|さみだれ",
+"秋の【時雨】が降る。|しぐれ",
+"【海女】が貝を採る。|あま",
+"夏の【名残】を惜しむ。|なごり",
+"田植えをする【早乙女】。|さおとめ",
+"【梅雨】の季節に入った。|つゆ",
+"【木綿】の肌着を着る。|もめん",
+"手に【数珠】を握る。|じゅず",
+"山で【雪崩】が起きた。|なだれ",
+"【吹雪】の中を進む。|ふぶき",
+"剣道の【竹刀】を持つ。|しない",
+"腰に【太刀】を差す。|たち",
+"【波止場】で船を待つ。|はとば",
+"白い【足袋】をはく。|たび",
+"玄関で【草履】を脱ぐ。|ぞうり",
+"【小豆】を煮て餡を作る。|あずき",
+"清らかな【乙女】の姿。|おとめ",
+"【母屋】の隣に離れを建てた。|おもや|もや",
+"【凸凹】の道を歩く。|でこぼこ",
+"創業百年の【老舗】の和菓子店。|しにせ",
+"【最寄り】の駅まで歩く。|もより",
+"【寄席】で落語を聞く。|よせ",
+"【大和】の国は奈良盆地に始まる。|やまと",
+"【眼鏡】を新調した。|めがね",
+"春の【息吹】を感じる。|いぶき",
+"国技の【相撲】を観戦する。|すもう",
+"【流石】に今日は疲れた。|さすが",
+"旅行の【土産】を買う。|みやげ",
+"駅前の【八百屋】で野菜を買う。|やおや",
+"彼女は【玄人】はだしの腕前だ。|くろうと",
+"これは【素人】にはできない仕事だ。|しろうと",
+"【為替】レートが変動する。|かわせ",
+"夏祭りで【浴衣】を着る。|ゆかた",
+"【明日】は晴れるでしょう。|あす|あした",
+"【昨日】の出来事を日記に書く。|きのう",
+"【一昨日】のことを思い出す。|おととい",
+"【河原】でバーベキューをする。|かわら",
+"窓からの【景色】が美しい。|けしき",
+"食後に【果物】を食べる。|くだもの",
+"庭の【砂利】を敷き直す。|じゃり",
+"岩間から【清水】が湧き出る。|しみず",
+"公園の【芝生】で寝転ぶ。|しばふ",
+"【師走】は何かと忙しい。|しわす",
+"【七夕】に短冊を飾る。|たなばた",
+"デパートで【迷子】になった。|まいご",
+"【行方】不明の登山者を捜す。|ゆくえ",
+"【若人】の活躍に期待する。|わこうど",
+"温泉で【硫黄】の匂いがする。|いおう",
+"【河岸】を変えて飲み直す。|かし",
+"祭りで【三味線】を弾く。|しゃみせん",
+"小春【日和】の散歩。|びより",
+"柔道の【猛者】が集まった。|もさ",
+"【早苗】が風に揺れる。|さなえ",
+"夏休みに【田舎】へ帰る。|いなか",
+"【叔父】は海外で働いている。|おじ",
+"【伯母】が遊びに来た。|おば",
+"神主が【祝詞】を奏上する。|のりと",
+"秋祭りで【神楽】を舞う。|かぐら",
+"【風邪】をひいて寝込む。|かぜ",
+"【固唾】をのんで見守る。|かたず",
+"座り【心地】のよい椅子。|ごこち",
+"彼女は料理が【上手】だ。|じょうず",
+"字が【下手】で恥ずかしい。|へた",
+"彼は【意気地】がなくて困る。|いくじ",
+"結婚式の【仲人】を頼まれた。|なこうど",
+"彼は村の物知り【博士】と呼ばれている。|はかせ",
+"波止場で【雑魚】を釣る。|ざこ"
+];
+
+/* ================= ユーティリティ ================= */
+const $ = (s) => document.querySelector(s);
+const parse = (arr, c) => arr.map((r) => { const p = r.split('|'); return { s: p[0], a: p.slice(1), c: c }; });
+const BANK = [].concat(parse(ON, 'on'), parse(KUN, 'kun'), parse(SP, 'sp'));
+const CAT = { on: '音読み', kun: '訓読み', sp: '特殊' };
+
+function norm(s) {
+  return String(s).normalize('NFKC').replace(/[\s\u3000]/g, '').replace(/[\u30A1-\u30F6]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60));
+}
+function frag(s) {
+  const f = document.createDocumentFragment();
+  const re = /【(.+?)】/g; let last = 0, m;
+  while ((m = re.exec(s))) {
+    if (m.index > last) f.append(s.slice(last, m.index));
+    const sp = document.createElement('span'); sp.className = 't'; sp.textContent = m[1]; f.append(sp);
+    last = re.lastIndex;
+  }
+  if (last < s.length) f.append(s.slice(last));
+  return f;
+}
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function shuffleArr(a) {
+  const r = a.slice();
+  for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = r[i]; r[i] = r[j]; r[j] = t; }
+  return r;
+}
+
+/* ================= 学習記録（正解済み・苦手） =================
+   rec: 問題文 -> { s: 'd'（正解済み）| 'w'（苦手）, t: 記録した時刻（1970年からの経過分。0は時刻不明） }
+   保存先はこのブラウザの localStorage。保存できない環境でも、メモリ上では動きます。 */
+const RK = 'kanken2-yomi-rec-v2';
+const OLD_WK = 'kanken2-yomi-weak-v1';   // 旧形式（移行用に読むだけ）
+const OLD_DK = 'kanken2-yomi-done-v1';
+// 字体を改めた問題：旧→新の問題文
+const MIG = {
+  '赤字を【補填】する。': '赤字を【補塡】する。',
+  '市民としての権利を【剥奪】される。': '市民としての権利を【剝奪】される。',
+  '壁のポスターを【剥がす】。': '壁のポスターを【剝がす】。'
+};
+let storageOK = (function () {
+  try { localStorage.setItem('kk2-probe', '1'); localStorage.removeItem('kk2-probe'); return true; } catch (e) { return false; }
+})();
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { storageOK = false; return false; } }
+function readOldList(key) {
+  const raw = lsGet(key);
+  if (!raw) return [];
+  try { const a = JSON.parse(raw); return Array.isArray(a) ? a.filter((x) => typeof x === 'string') : []; } catch (e) { return []; }
+}
+function loadRec() {
+  const m = new Map();
+  const raw = lsGet(RK);
+  if (raw) {
+    try {
+      const a = JSON.parse(raw);
+      if (Array.isArray(a)) {
+        a.forEach((r) => {
+          if (Array.isArray(r) && typeof r[0] === 'string' && (r[1] === 'd' || r[1] === 'w')) {
+            m.set(r[0], { s: r[1], t: Math.max(0, Math.floor(Number(r[2])) || 0) });
+          }
+        });
+      }
+    } catch (e) { /* 壊れていたら空から始める */ }
+    return m;
+  }
+  // 旧形式（v1）から移行
+  readOldList(OLD_DK).forEach((q) => m.set(MIG[q] || q, { s: 'd', t: 0 }));
+  readOldList(OLD_WK).forEach((q) => { const k = MIG[q] || q; if (!m.has(k)) m.set(k, { s: 'w', t: 0 }); });
+  if (m.size) {
+    try { lsSet(RK, JSON.stringify(Array.from(m, (e) => [e[0], e[1].s, e[1].t]))); } catch (e) { /* 続行 */ }
+  }
+  return m;
+}
+let rec = loadRec();
+function saveRec() { lsSet(RK, JSON.stringify(Array.from(rec, (e) => [e[0], e[1].s, e[1].t]))); }
+function stOf(q) { const r = rec.get(q.s); return r ? r.s : ''; }
+function isDone(q) { return stOf(q) === 'd'; }
+function isWeak(q) { return stOf(q) === 'w'; }
+function nowMin() { return Math.floor(Date.now() / 60000); }
+function localCounts() {
+  let d = 0, w = 0;
+  BANK.forEach((q) => { const st = stOf(q); if (st === 'd') d++; else if (st === 'w') w++; });
+  return { d: d, w: w };
+}
+
+/* ---- 引き継ぎコードの作成・解読（画面に依存しない部分） ----
+   コード = "kk2.1." + 問題ごとの15文字（問題ID8桁16進 + 状態1字 + 時刻6桁36進）… + "." + チェック値8桁 */
+const CODE_PREFIX = 'kk2.1.';
+const ITEM_LEN = 15;
+function fnv32(str) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+  return (h >>> 0).toString(16).padStart(8, '0');
+}
+const QID = new Map();
+BANK.forEach((q) => { q.id = fnv32(q.s); if (QID.has(q.id) && window.console) console.warn('ID衝突', q.s); QID.set(q.id, q); });
+function buildCode() {
+  let body = '', nd = 0, nw = 0;
+  BANK.forEach((q) => {
+    const r = rec.get(q.s);
+    if (!r) return;
+    body += q.id + r.s + r.t.toString(36).padStart(6, '0');
+    if (r.s === 'd') nd++; else nw++;
+  });
+  return { code: CODE_PREFIX + body + '.' + fnv32(CODE_PREFIX + body), nd: nd, nw: nw };
+}
+function parseCode(text) {
+  const t = String(text).normalize('NFKC').replace(/[\s\u200b-\u200d\ufeff]+/g, '').toLowerCase();
+  if (t.indexOf('kk2.') !== 0) return { err: 'format' };
+  if (t.indexOf(CODE_PREFIX) !== 0) return { err: 'version' };
+  const dot = t.lastIndexOf('.');
+  if (dot < CODE_PREFIX.length) return { err: 'broken' };
+  const body = t.slice(CODE_PREFIX.length, dot);
+  const chk = t.slice(dot + 1);
+  if (!/^[0-9a-f]{8}$/.test(chk) || fnv32(CODE_PREFIX + body) !== chk) return { err: 'broken' };
+  if (body.length % ITEM_LEN !== 0) return { err: 'format' };
+  const byId = new Map();
+  for (let i = 0; i < body.length; i += ITEM_LEN) {
+    const m = /^([0-9a-f]{8})([dw])([0-9a-z]{6})$/.exec(body.slice(i, i + ITEM_LEN));
+    if (!m) return { err: 'format' };
+    const it = { id: m[1], s: m[2], t: parseInt(m[3], 36) };
+    const old = byId.get(it.id);
+    if (!old || it.t > old.t || (it.t === old.t && it.s === 'w')) byId.set(it.id, it);
+  }
+  const items = [];
+  let unknown = 0, nd = 0, nw = 0;
+  byId.forEach((it) => {
+    const q = QID.get(it.id);
+    if (!q) { unknown++; return; }
+    items.push({ q: q, s: it.s, t: it.t });
+    if (it.s === 'd') nd++; else nw++;
+  });
+  return { items: items, unknown: unknown, nd: nd, nw: nw };
+}
+function applyImport(items, mode) {
+  if (mode === 'replace') rec = new Map();
+  let added = 0, updated = 0;
+  items.forEach((it) => {
+    const cur = rec.get(it.q.s);
+    if (!cur) { rec.set(it.q.s, { s: it.s, t: it.t }); added++; return; }
+    if (cur.s === it.s) { if (it.t > cur.t) cur.t = it.t; return; }
+    // 結果が食い違うとき：新しい方を採用。同時刻なら安全側（苦手）
+    if (it.t > cur.t || (it.t === cur.t && it.s === 'w')) { rec.set(it.q.s, { s: it.s, t: it.t }); updated++; }
+  });
+  saveRec();
+  return { added: added, updated: updated };
+}
+
+const state = { qs: [], ans: [], inputs: [], blankConfirm: false, res: [] };
+
+/* ================= 画面切り替え ================= */
+function show(id) {
+  ['start', 'test', 'result'].forEach((v) => { $('#' + v).hidden = (v !== id); });
+  window.scrollTo(0, 0);
+}
+
+/* ================= 開始画面 ================= */
+function refreshCounts() {
+  const cnt = { all: 0, on: 0, kun: 0, sp: 0 };
+  BANK.forEach((q) => { if (stOf(q) === '') { cnt[q.c]++; cnt.all++; } });
+  const w = BANK.filter(isWeak).length;
+  const d = BANK.filter(isDone).length;
+  $('#doneNote').textContent = (d === 0 && w === 0) ? '' :
+    '正解済み ' + d + ' / ' + BANK.length + '問（出題されません）・苦手 ' + w + '問（「苦手だけ」で出題）';
+  $('#resetBtn').hidden = (d === 0);
+  $('#totalCount').textContent = BANK.length;
+  $('#c-all').textContent = cnt.all;
+  $('#c-on').textContent = cnt.on;
+  $('#c-kun').textContent = cnt.kun;
+  $('#c-sp').textContent = cnt.sp;
+  $('#c-weak').textContent = w;
+  const wr = $('#weakRadio');
+  wr.disabled = (w === 0);
+  if (w === 0 && wr.checked) document.querySelector('input[name=scope][value=all]').checked = true;
+  refreshTransfer();
+}
+
+function buildPool() {
+  const scope = document.querySelector('input[name=scope]:checked').value;
+  const n = document.querySelector('input[name=count]:checked').value;
+  let pool = BANK.filter((q) => scope === 'weak' ? isWeak(q) : (stOf(q) === '' && (scope === 'all' || q.c === scope)));
+  if ($('#shuffle').checked) pool = shuffleArr(pool);
+  if (n !== 'all') pool = pool.slice(0, parseInt(n, 10));
+  return pool;
+}
+
+/* ================= テスト画面 ================= */
+function showStartMsg(t) { const m = $('#startMsg'); m.textContent = t; m.hidden = false; }
+function emptyPoolMsg() {
+  const scope = document.querySelector('input[name=scope]:checked').value;
+  if (scope === 'weak') return '苦手の問題はありません。';
+  return 'この範囲に、まだ出題していない問題はありません。' +
+    (BANK.some(isWeak) ? '「苦手だけ」で、まちがえた問題を復習できます。' : '範囲を変えるか、正解済みの記録をリセットしてください。');
+}
+function startTest(list) {
+  if (!list.length) { showStartMsg(emptyPoolMsg()); return; }
+  $('#startMsg').hidden = true;
+  state.qs = list;
+  state.ans = list.map(() => '');
+  state.blankConfirm = false;
+  renderTest();
+  show('test');
+  if (window.matchMedia && window.matchMedia('(pointer: fine)').matches && state.inputs[0]) state.inputs[0].focus({ preventScroll: true });
+}
+
+function renderTest() {
+  const ol = $('#qlist');
+  ol.textContent = '';
+  state.inputs = [];
+  state.qs.forEach((q, i) => {
+    const li = el('li', 'q');
+    li.append(el('div', 'no', String(i + 1)));
+    const s = el('p', 's'); s.append(frag(q.s));
+    const a = el('div', 'ans');
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.lang = 'ja';
+    inp.placeholder = 'ひらがなで入力';
+    inp.autocomplete = 'off';
+    inp.autocapitalize = 'off';
+    inp.spellcheck = false;
+    inp.setAttribute('autocorrect', 'off');
+    inp.setAttribute('aria-label', '第' + (i + 1) + '問の答え');
+    inp.addEventListener('input', () => {
+      state.ans[i] = inp.value;
+      li.classList.toggle('filled', norm(inp.value) !== '');
+      state.blankConfirm = false;
+      updateProgress();
+    });
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) {
+        e.preventDefault();
+        const next = state.inputs[i + 1];
+        if (next) { next.focus({ preventScroll: true }); next.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+        else { $('#gradeBtn').focus(); }
+      }
+    });
+    a.append(inp);
+    li.append(s, a);
+    ol.append(li);
+    state.inputs.push(inp);
+  });
+  $('#total').textContent = state.qs.length;
+  updateProgress();
+}
+
+function answeredCount() { return state.ans.filter((v) => norm(v) !== '').length; }
+function updateProgress() {
+  const n = answeredCount(), t = state.qs.length;
+  $('#answered').textContent = n;
+  $('#progBar').style.width = (t ? (n / t * 100) : 0) + '%';
+  const m = $('#submitMsg'), b = $('#gradeBtn');
+  if (state.blankConfirm) {
+    m.textContent = '未回答が' + (t - n) + '問あります。このまま採点しますか？';
+    m.className = 'msg warn';
+    b.textContent = 'このまま採点する';
+  } else {
+    m.textContent = n === t ? 'すべて回答しました。' : 'すべて答えたら採点します。';
+    m.className = 'msg';
+    b.textContent = '採点する';
+  }
+}
+
+let quitTimer = null;
+function onQuit() {
+  const b = $('#quitBtn');
+  if (answeredCount() === 0 || b.dataset.armed === '1') {
+    clearTimeout(quitTimer); b.dataset.armed = ''; b.textContent = '中断する';
+    refreshCounts(); show('start'); return;
+  }
+  b.dataset.armed = '1'; b.textContent = '回答が消えます。もう一度押すと中断';
+  quitTimer = setTimeout(() => { b.dataset.armed = ''; b.textContent = '中断する'; }, 3500);
+}
+
+/* ================= 採点・結果 ================= */
+function onGrade() {
+  const blanks = state.qs.length - answeredCount();
+  if (blanks > 0 && !state.blankConfirm) { state.blankConfirm = true; updateProgress(); return; }
+  state.res = state.qs.map((q, i) => {
+    const user = state.ans[i];
+    const ok = norm(user) !== '' && q.a.some((x) => norm(x) === norm(user));
+    return { q: q, user: user, ok: ok };
+  });
+  const tm = nowMin();
+  state.res.forEach((r) => { rec.set(r.q.s, { s: r.ok ? 'd' : 'w', t: tm }); });
+  saveRec();
+  renderResult();
+  show('result');
+}
+
+function renderResult() {
+  const res = state.res, total = res.length;
+  const ok = res.filter((r) => r.ok).length;
+  const pct = total ? Math.round(ok / total * 100) : 0;
+  let msg;
+  if (pct >= 90) msg = 'ほぼ満点です。この調子で範囲を広げましょう。';
+  else if (pct >= 80) msg = '合格の目安（正答率およそ80%）に届いています。';
+  else if (pct >= 60) msg = 'あと少しです。まちがえた問題を復習しましょう。';
+  else msg = 'まずはまちがえた問題から、くり返し解きましょう。';
+
+  const sum = $('#summary');
+  sum.textContent = '';
+  const score = el('div', 'score');
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('viewBox', '0 0 240 120');
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.setAttribute('aria-hidden', 'true');
+  const path = document.createElementNS(svgNS, 'path');
+  path.setAttribute('d', 'M126 8 C 190 4, 234 28, 232 60 C 230 94, 178 114, 118 112 C 54 110, 8 90, 10 58 C 12 26, 60 10, 132 12 C 150 13, 160 16, 168 20');
+  svg.append(path);
+  const num = el('div', 'num');
+  num.append(String(ok));
+  num.append(el('small', '', '／' + total));
+  score.append(svg, num);
+  sum.append(score);
+  sum.append(el('p', 'pct', '正答率 ' + pct + '%'));
+  sum.append(el('p', '', msg));
+  sum.append(el('p', 'small', '漢検2級の合格目安は、全体の得点率およそ80%です。'));
+  const lc = localCounts();
+  sum.append(el('p', 'small', '正解済み ' + lc.d + ' / ' + BANK.length + '問・苦手 ' + lc.w + '問。正解した問題は出題されません。まちがえた問題は「苦手だけ」で復習できます。'));
+  try { const len = Math.ceil(path.getTotalLength()); path.style.strokeDasharray = len; path.style.setProperty('--len', len); } catch (e) { /* アニメ省略 */ }
+
+  $('#onlyWrong').checked = false;
+  renderReview();
+}
+
+function renderReview() {
+  const only = $('#onlyWrong').checked;
+  const ol = $('#rlist');
+  ol.textContent = '';
+  let shown = 0;
+  state.res.forEach((r, i) => {
+    if (only && r.ok) return;
+    shown++;
+    const li = el('li', 'r ' + (r.ok ? 'ok' : 'ng'));
+    const no = el('div', 'no');
+    no.append(el('span', '', String(i + 1)));
+    const mk = el('span', 'mark', r.ok ? '○' : '×');
+    mk.setAttribute('role', 'img');
+    mk.setAttribute('aria-label', r.ok ? '正解' : '不正解');
+    no.append(mk);
+    const s = el('p', 's'); s.append(frag(r.q.s)); s.append(el('span', 'tag', CAT[r.q.c]));
+    const a = el('div', 'ans');
+    const you = el('div');
+    you.append(el('span', 'lbl', 'あなたの答え'));
+    you.append(el('span', 'val', norm(r.user) === '' ? '（未回答）' : r.user));
+    a.append(you);
+    const right = el('div', 'right');
+    right.append(el('span', 'lbl', '正解'));
+    right.append(el('span', 'val', r.q.a.join('／')));
+    a.append(right);
+    li.append(no, s, a);
+    ol.append(li);
+  });
+  if (!shown) {
+    const li = el('li', '');
+    li.style.padding = '24px 16px';
+    li.style.textAlign = 'center';
+    li.textContent = 'まちがいはありません。全問正解です。';
+    ol.append(li);
+  }
+}
+
+/* ================= イベント ================= */
+$('#startBtn').addEventListener('click', () => startTest(buildPool()));
+$('#gradeBtn').addEventListener('click', onGrade);
+$('#quitBtn').addEventListener('click', onQuit);
+$('#onlyWrong').addEventListener('change', renderReview);
+$('#againBtn').addEventListener('click', () => {
+  refreshCounts();
+  const pool = buildPool();
+  if (!pool.length) {
+    show('start');
+    showStartMsg(emptyPoolMsg());
+    return;
+  }
+  startTest(pool);
+});
+let resetTimer = null;
+$('#resetBtn').addEventListener('click', () => {
+  const b = $('#resetBtn');
+  if (b.dataset.armed === '1') {
+    clearTimeout(resetTimer); b.dataset.armed = ''; b.textContent = '正解済みの記録をリセット';
+    Array.from(rec.keys()).forEach((k) => { if (rec.get(k).s === 'd') rec.delete(k); });
+    saveRec(); $('#startMsg').hidden = true; refreshCounts(); return;
+  }
+  b.dataset.armed = '1'; b.textContent = 'もう一度押すと、正解済みがすべて未出題に戻ります';
+  resetTimer = setTimeout(() => { b.dataset.armed = ''; b.textContent = '正解済みの記録をリセット'; }, 3500);
+});
+$('#homeBtn').addEventListener('click', () => { refreshCounts(); show('start'); });
+
+/* ================= 記録の引き継ぎ（画面） ================= */
+const xfer = $('#xfer'), expCode = $('#expCode'), expInfo = $('#expInfo'), copyBtn = $('#copyBtn'), copyMsg = $('#copyMsg');
+const impCode = $('#impCode'), impInfo = $('#impInfo'), mergeBtn = $('#mergeBtn'), replaceBtn = $('#replaceBtn');
+const ERR = {
+  format: 'このコードは読み取れません。「kk2.1.」で始まる引き継ぎコードを、最後まで貼り付けてください。',
+  broken: 'コードが途中で切れているか、文字が欠けています。書き出し側でもう一度コピーして、全体を貼り付けてください。',
+  version: 'このコードは、このテストより新しい形式のため読み込めません。'
+};
+let impParsed = null, replaceTimer = null;
+
+function refreshExport() {
+  const b = buildCode();
+  copyMsg.textContent = '';
+  if (b.nd + b.nw === 0) {
+    expCode.value = '';
+    expInfo.textContent = 'まだ記録がありません。テストを解くと、ここに引き継ぎコードができます。';
+    copyBtn.disabled = true;
+  } else {
+    expCode.value = b.code;
+    expInfo.textContent = '正解済み ' + b.nd + '問・苦手 ' + b.nw + '問の記録です（' + b.code.length + '文字）。';
+    copyBtn.disabled = false;
+  }
+}
+function refreshTransfer() {
+  $('#storeWarn').hidden = storageOK;
+  refreshExport();
+  if (impCode.value.trim()) updateImport();
+}
+function disarmReplace() {
+  clearTimeout(replaceTimer);
+  replaceBtn.dataset.armed = '';
+  replaceBtn.textContent = '置き換えて読み込む';
+}
+function updateImport() {
+  disarmReplace();
+  impParsed = null;
+  mergeBtn.disabled = true;
+  replaceBtn.disabled = true;
+  impInfo.className = 'info';
+  if (!impCode.value.trim()) { impInfo.textContent = ''; return; }
+  const r = parseCode(impCode.value);
+  if (r.err) { impInfo.className = 'info warn'; impInfo.textContent = ERR[r.err]; return; }
+  if (!r.items.length) {
+    impInfo.className = 'info warn';
+    impInfo.textContent = r.unknown ? 'このコードの記録は、いまのテストにない問題のものです。読み込めません。' : '記録が入っていないコードです。';
+    return;
+  }
+  impParsed = r;
+  const c = localCounts();
+  impInfo.textContent = 'コードの内容：正解済み ' + r.nd + '問・苦手 ' + r.nw + '問。この端末の今の記録：正解済み ' + c.d + '問・苦手 ' + c.w + '問。' +
+    (r.unknown ? '（' + r.unknown + '件は、いまのテストにない問題なので無視します）' : '');
+  mergeBtn.disabled = false;
+  replaceBtn.disabled = false;
+}
+function doImport(mode) {
+  if (!impParsed) return;
+  const res = applyImport(impParsed.items, mode);
+  impCode.value = '';
+  updateImport();
+  refreshCounts();
+  const c = localCounts();
+  impInfo.className = 'info okmsg';
+  impInfo.textContent = (mode === 'replace' ? '置き換えました。' : '統合して読み込みました（新規 ' + res.added + '問・更新 ' + res.updated + '問）。') +
+    'いまの記録：正解済み ' + c.d + '問・苦手 ' + c.w + '問。';
+}
+async function copyText(text, ta) {
+  try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(text); return true; } } catch (e) { /* 次の方法へ */ }
+  try { ta.focus(); ta.select(); ta.setSelectionRange(0, text.length); if (document.execCommand('copy')) return true; } catch (e) { /* 失敗 */ }
+  return false;
+}
+xfer.addEventListener('toggle', () => { if (xfer.open) refreshTransfer(); });
+expCode.addEventListener('focus', () => { expCode.select(); });
+expCode.addEventListener('click', () => { expCode.select(); });
+copyBtn.addEventListener('click', async () => {
+  const ok = await copyText(expCode.value, expCode);
+  copyMsg.className = ok ? 'info okmsg' : 'info warn';
+  copyMsg.textContent = ok ? 'コピーしました。別の端末の「読み込む」欄に貼り付けてください。'
+                           : '自動でコピーできませんでした。コードを選択した状態にしたので、長押し（パソコンは Ctrl+C）でコピーしてください。';
+  if (!ok) { expCode.focus(); expCode.select(); }
+});
+impCode.addEventListener('input', updateImport);
+mergeBtn.addEventListener('click', () => doImport('merge'));
+replaceBtn.addEventListener('click', () => {
+  if (!impParsed) return;
+  if (replaceBtn.dataset.armed === '1') { disarmReplace(); doImport('replace'); return; }
+  replaceBtn.dataset.armed = '1';
+  replaceBtn.textContent = '本当に置き換える（今の記録は消えます）';
+  replaceTimer = setTimeout(disarmReplace, 4000);
+});
+// 別のタブで記録が変わったとき
+window.addEventListener('storage', (e) => {
+  if (e.key === RK || e.key === null) { rec = loadRec(); refreshCounts(); }
+});
+
+refreshCounts();
+})();
+</script>
+</body>
+</html>
