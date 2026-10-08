@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>漢検2級 読みテスト</title>
+<title>漢検 読みテスト（準2級〜1級）</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
@@ -224,6 +224,14 @@ ol.qs { list-style: none; margin: 0; padding: 0; }
   .r .s { grid-row: auto; padding-bottom: 14px; }
   .r .ans { padding: 14px; border-left: 1px solid var(--line); }
 }
+/* ---------- 文の折り返し（意味のまとまりで改行する） ---------- */
+.ph, .s, .sample { word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+.nb { white-space: nowrap; }
+.lvdesc { margin: 8px 0 0; font-size: .9rem; color: var(--muted); min-height: 1.4em; }
+.expsel { margin: 2px 0 8px; }
+.expsel .opts { gap: 6px 16px; }
+.expsel small { color: var(--muted); margin-left: 4px; font-size: .78rem; }
+
 /* ---------- 記録の引き継ぎ ---------- */
 .xfer { margin-top: 18px; background: var(--sheet); border: 2px solid var(--indigo); }
 .xfer > summary { cursor: pointer; padding: 12px 16px; font-weight: 700; color: var(--indigo); }
@@ -258,14 +266,24 @@ textarea.code:focus { outline: 3px solid var(--indigo); outline-offset: 1px; bor
   <!-- ===== 開始画面 ===== -->
   <main id="start">
     <header class="hero">
-      <h1 class="title"><span class="t1">漢検二級</span><span class="t2">読みテスト</span></h1>
+      <h1 class="title"><span class="t1">漢検<span id="lvTitle">2級</span></span><span class="t2">読みテスト</span></h1>
       <div class="hero-body">
-        <p>文中の<span class="t">下線部</span>の読みを、テキストボックスに入力して答えます。全<b id="totalCount">0</b>問を収録。</p>
-        <div class="sample">例　近所の人と朝の<span class="t">挨拶</span>を交わす。<small>→「あいさつ」と入力</small></div>
+        <p class="ph">文中の<span class="t">下線部</span>の読みを、テキストボックスに入力して答えます。<span class="nb">この級の収録は<b id="totalCount">0</b>問です。</span></p>
+        <div class="sample ph">例　近所の人と朝の<span class="t">挨拶</span>を交わす。<small>→「あいさつ」と入力</small></div>
       </div>
     </header>
 
     <div class="sheet pad">
+      <fieldset>
+        <legend>級</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="level" value="j2"><span>準2級<small id="c-lv-j2"></small></span></label>
+          <label class="opt"><input type="radio" name="level" value="2" checked><span>2級<small id="c-lv-2"></small></span></label>
+          <label class="opt"><input type="radio" name="level" value="j1"><span>準1級<small id="c-lv-j1"></small></span></label>
+          <label class="opt"><input type="radio" name="level" value="1"><span>1級<small id="c-lv-1"></small></span></label>
+        </div>
+        <p class="lvdesc ph" id="lvDesc"></p>
+      </fieldset>
       <fieldset>
         <legend>出題範囲</legend>
         <div class="opts">
@@ -275,8 +293,8 @@ textarea.code:focus { outline: 3px solid var(--indigo); outline-offset: 1px; bor
           <label class="opt"><input type="radio" name="scope" value="sp"><span>熟字訓・特殊な読み<small id="c-sp"></small></span></label>
           <label class="opt"><input type="radio" name="scope" value="weak" id="weakRadio"><span>苦手だけ<small id="c-weak"></small></span></label>
         </div>
-        <p class="note" id="doneNote" style="margin-top:10px"></p>
-        <button class="linkbtn" id="resetBtn" type="button" hidden>正解済みの記録をリセット</button>
+        <p class="note ph" id="doneNote" style="margin-top:10px"></p>
+        <button class="linkbtn" id="resetBtn" type="button" hidden>この級の正解済みの記録をリセット</button>
       </fieldset>
       <fieldset>
         <legend>問題数</legend>
@@ -292,32 +310,41 @@ textarea.code:focus { outline: 3px solid var(--indigo); outline-offset: 1px; bor
         <label class="check"><input type="checkbox" id="shuffle" checked>順番をシャッフルする</label>
       </fieldset>
       <button class="btn primary block" id="startBtn" type="button">テストを始める</button>
-      <p class="warn" id="startMsg" hidden></p>
-      <p class="note">答えは「ひらがな」で入力します（カタカナや全角・半角は自動で補正）。変換を確定してからEnterを押すと、次の問題へ移ります。各範囲の数字は、まだ出題していない問題の数です。一度正解した問題は出題されません。まちがえた問題は「苦手」として記録され、「苦手だけ」を選んだときに出題されます（記録はこのブラウザに保存されます）。</p>
+      <p class="warn ph" id="startMsg" hidden></p>
+      <p class="note ph">答えは「ひらがな」で入力します（カタカナや全角・半角は自動で補正）。変換を確定してからEnterを押すと、次の問題へ移ります。各範囲の数字は、まだ出題していない問題の数です。一度正解した問題は出題されません。まちがえた問題は「苦手」として記録され、「苦手だけ」を選んだときに出題されます（記録はこのブラウザに保存されます）。級の分け方は、各級の配当漢字を目安にしたもので、公式の出題と完全には一致しません。</p>
     </div>
 
     <details class="xfer" id="xfer">
       <summary>記録の引き継ぎ（別の端末に移す）</summary>
       <div class="xfer-body">
-        <p class="note">「正解済み」と「苦手」の記録を、文字だけの<b>引き継ぎコード</b>にして別の端末へ移せます。書き出し側でコードをコピーし、読み込み側の欄に貼り付けてください。</p>
-        <p class="warn" id="storeWarn" hidden>このブラウザでは記録を保存できないため、ページを閉じると記録が消えます。必要なら、先にコードを書き出してください。</p>
+        <p class="note ph">「正解済み」と「苦手」の記録を、文字だけの<b>引き継ぎコード</b>にして別の端末へ移せます。書き出し側でコードをコピーし、読み込み側の欄に貼り付けてください。すべての級をまとめても、級を選んでも書き出せます。以前の版で作ったコード（kk2.1. で始まる）も読み込めます。</p>
+        <p class="warn ph" id="storeWarn" hidden>このブラウザでは記録を保存できないため、ページを閉じると記録が消えます。必要なら、先にコードを書き出してください。</p>
 
         <h3>この端末の記録を書き出す</h3>
-        <p id="expInfo" class="info"></p>
+        <fieldset class="expsel">
+          <legend>書き出す級</legend>
+          <div class="opts">
+            <label class="check"><input type="checkbox" class="expLv" value="j2" checked>準2級<small id="e-j2"></small></label>
+            <label class="check"><input type="checkbox" class="expLv" value="2" checked>2級<small id="e-2"></small></label>
+            <label class="check"><input type="checkbox" class="expLv" value="j1" checked>準1級<small id="e-j1"></small></label>
+            <label class="check"><input type="checkbox" class="expLv" value="1" checked>1級<small id="e-1"></small></label>
+          </div>
+        </fieldset>
+        <p id="expInfo" class="info ph"></p>
         <label class="sr" for="expCode">引き継ぎコード（書き出し用）</label>
         <textarea class="code" id="expCode" rows="4" readonly spellcheck="false" autocomplete="off"></textarea>
         <div class="acts"><button class="btn" id="copyBtn" type="button">コードをコピー</button></div>
-        <p class="info" id="copyMsg" role="status" aria-live="polite"></p>
+        <p class="info ph" id="copyMsg" role="status" aria-live="polite"></p>
 
         <h3>別の端末の記録を読み込む</h3>
         <label class="lbl" for="impCode">引き継ぎコードを貼り付け</label>
-        <textarea class="code" id="impCode" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="kk2.1. で始まるコードを貼り付け"></textarea>
-        <p class="info" id="impInfo" role="status" aria-live="polite"></p>
+        <textarea class="code" id="impCode" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="kk3. で始まるコードを貼り付け"></textarea>
+        <p class="info ph" id="impInfo" role="status" aria-live="polite"></p>
         <div class="acts">
           <button class="btn primary" id="mergeBtn" type="button" disabled>統合して読み込む</button>
           <button class="btn" id="replaceBtn" type="button" disabled>置き換えて読み込む</button>
         </div>
-        <p class="note"><b>統合</b>：今の記録を残したまま、コードの記録を足します。同じ問題で結果が食い違うときは、新しく解いた方を採用します（おすすめ）。<br><b>置き換え</b>：今の記録をすべて消して、コードの内容だけにします。</p>
+        <p class="note ph"><b>統合</b>：今の記録を残したまま、コードの記録を足します。同じ問題で結果が食い違うときは、新しく解いた方を採用します（おすすめ）。<br><b>置き換え</b>：コードに含まれる級の今の記録を消して、コードの内容に入れ替えます。コードに含まれない級の記録は、そのまま残ります。</p>
       </div>
     </details>
   </main>
@@ -832,26 +859,902 @@ const SP = [
 "波止場で【雑魚】を釣る。|ざこ"
 ];
 
+// ===== 準2級（高校在学程度） =====
+const J2_ON = [
+"【偉大】な先人の業績をたたえる。|いだい",
+"【威圧】的な態度に誰もが口を閉ざした。|いあつ",
+"退職する社員を【慰労】する会を開く。|いろう",
+"【緯度】と経度で場所を表す。|いど",
+"現状を【維持】するだけで精いっぱいだ。|いじ",
+"常軌を【逸脱】した行動を慎む。|いつだつ",
+"【陰影】に富んだ白黒写真。|いんえい",
+"【韻文】と散文の違いを学ぶ。|いんぶん",
+"酔った客を【殴打】した疑いで逮捕された。|おうだ",
+"【凹凸】の多い山道を歩く。|おうとつ",
+"【哀愁】の漂う歌声に聞き入った。|あいしゅう",
+"他人に【依存】する生き方を改める。|いぞん",
+"【詠嘆】を込めて歌い上げる。|えいたん",
+"満場の拍手に【満悦】の様子だ。|まんえつ",
+"図書館で古い新聞を【閲覧】する。|えつらん",
+"新入社員の歓迎【宴会】を開く。|えんかい",
+"報道の内容に【懐疑】的な意見が出た。|かいぎ",
+"大臣の【弾劾】を求める。|だんがい",
+"彼は幸せな【生涯】を送った。|しょうがい",
+"条件に【該当】する項目に印をつける。|がいとう",
+"【地殻】変動で山脈が隆起した。|ちかく",
+"文中の【括弧】の使い方を直す。|かっこ",
+"自由への【渇望】が人々を動かした。|かつぼう",
+"【褐色】の肌をした少年。|かっしょく",
+"市の【管轄】外の事件だ。|かんかつ",
+"会社の【定款】を変更する。|ていかん",
+"失敗した部下にも【寛容】に接する。|かんよう",
+"この点が最も【肝要】だ。|かんよう",
+"海上に【艦隊】が集結した。|かんたい",
+"最後まで初志を【貫徹】する。|かんてつ",
+"利益を社会に【還元】する。|かんげん",
+"昼間の商店街は【閑散】としている。|かんさん",
+"道路が地盤ごと【陥没】した。|かんぼつ",
+"将来は競馬の【騎手】になりたい。|きしゅ",
+"【飢餓】に苦しむ人々を支援する。|きが",
+"人工衛星の【軌道】を修正する。|きどう",
+"契約を一方的に【破棄】する。|はき",
+"多くの【犠牲】を払って勝ち取った。|ぎせい",
+"【窮乏】した生活から抜け出す。|きゅうぼう",
+"相手の要求を【拒絶】する。|きょぜつ",
+"各地に活動の【拠点】を設ける。|きょてん",
+"二点間の【距離】を測る。|きょり",
+"【虚偽】の申告をした。|きょぎ",
+"外敵の【脅威】にさらされる。|きょうい",
+"【凶悪】な犯罪が増えている。|きょうあく",
+"【信仰】の自由が保障されている。|しんこう",
+"全神経を一点に【凝縮】させる。|ぎょうしゅく",
+"その言葉が心の【琴線】に触れた。|きんせん",
+"英雄を【偶像】化する。|ぐうぞう",
+"社員の【待遇】を改善する。|たいぐう",
+"試合に負けた【屈辱】を忘れない。|くつじょく",
+"功績が認められて【勲章】を授かる。|くんしょう",
+"王位の【継承】者を決める。|けいしょう",
+"市民の意識を【啓発】する。|けいはつ",
+"【渓谷】の紅葉を楽しむ。|けいこく",
+"【傑出】した才能の持ち主だ。|けっしゅつ",
+"【献身】的な看護に感謝する。|けんしん",
+"【謙虚】な姿勢を忘れない。|けんきょ",
+"【弦楽】四重奏を聴く。|げんがく",
+"【幻想】的な風景に息をのむ。|げんそう",
+"【孤独】に耐えて生きる。|こどく",
+"円周の一部を【円弧】という。|えんこ",
+"水資源が【枯渇】する。|こかつ",
+"【顧客】の要望に応える。|こきゃく",
+"休日は【囲碁】を打って過ごす。|いご",
+"質実【剛健】の校風。|ごうけん",
+"動物を【酷使】してはならない。|こくし",
+"荒れ地を【開墾】する。|かいこん",
+"相手の【魂胆】を見抜いた。|こんたん",
+"【紺色】の制服を着る。|こんいろ",
+"長年の【遺恨】を晴らす。|いこん",
+"飛行機が山中に【墜落】した。|ついらく",
+"野菜を温室で【栽培】する。|さいばい",
+"【宰相】の座を争う。|さいしょう",
+"新聞に広告を【掲載】する。|けいさい",
+"この【薬剤】は食後に服用する。|やくざい",
+"ここは【撮影】禁止だ。|さつえい",
+"両手をこすると【摩擦】熱が生じる。|まさつ",
+"大企業の【傘下】に入る。|さんか",
+"【選択肢】の中から一つ選ぶ。|せんたくし",
+"優劣の【雌雄】を決する。|しゆう",
+"祖母は【漆器】を大切にしている。|しっき",
+"【蛇口】をひねって水を出す。|じゃぐち",
+"【邪魔】にならないよう端に寄った。|じゃま",
+"情状【酌量】の余地がある。|しゃくりょう",
+"夜の【静寂】を破る物音がした。|せいじゃく",
+"【朱色】の鳥居をくぐる。|しゅいろ",
+"【真珠】のネックレスを贈る。|しんじゅ",
+"【儒教】の教えを学ぶ。|じゅきょう",
+"脱走した【囚人】が捕まった。|しゅうじん",
+"【需要】と供給のバランスを見る。|じゅよう",
+"遠い故郷への【郷愁】にかられる。|きょうしゅう",
+"働きに見合う【報酬】を受け取る。|ほうしゅう",
+"有名人の【醜聞】が報じられる。|しゅうぶん",
+"敵の【襲撃】を受けた。|しゅうげき",
+"踏切の手前では【徐行】する。|じょこう",
+"事実をありのままに【叙述】する。|じょじゅつ",
+"【硝酸】は取り扱い注意の薬品だ。|しょうさん",
+"【化粧】をして外出する。|けしょう",
+"祖父の【肖像】画を描いてもらう。|しょうぞう",
+"裁判所に【訴訟】を起こす。|そしょう",
+"社員の功績を【表彰】する。|ひょうしょう",
+"壊した物を【弁償】する。|べんしょう",
+"交渉が【暗礁】に乗り上げた。|あんしょう",
+"水を【浄化】する装置。|じょうか",
+"在庫が【過剰】になる。|かじょう",
+"【土壌】を改良して作物を育てる。|どじょう",
+"社長の【令嬢】が結婚した。|れいじょう",
+"日本酒を【醸造】する蔵。|じょうぞう",
+"沿岸に【津波】警報が出た。|つなみ",
+"【紳士】的な振る舞いを心がける。|しんし",
+"【妊娠】中の女性に席を譲る。|にんしん",
+"産業が【衰退】の一途をたどる。|すいたい",
+"旅の体験を【随筆】にまとめる。|ずいひつ",
+"神経の【中枢】が傷ついた。|ちゅうすう",
+"【是非】とも参加したい。|ぜひ",
+"用紙に【姓名】を記入する。|せいめい",
+"他国を武力で【征服】する。|せいふく",
+"経費の【請求】書を送る。|せいきゅう",
+"児童が校歌を【斉唱】する。|せいしょう",
+"恩師との【惜別】の情が募る。|せきべつ",
+"データを統計的に【分析】する。|ぶんせき",
+"【摂取】する栄養素のバランスを見る。|せっしゅ",
+"【仙人】のような暮らしを送る。|せんにん",
+"飛行機が上空を【旋回】する。|せんかい",
+"理論を【実践】に移す。|じっせん",
+"【遷都】の歴史を学ぶ。|せんと",
+"委員長に【推薦】する。|すいせん",
+"【繊維】工場を見学する。|せんい",
+"朝の【座禅】を日課とする。|ざぜん",
+"友人と次第に【疎遠】になった。|そえん",
+"物事の【基礎】を固める。|きそ",
+"【双方】の意見を聞く。|そうほう",
+"【壮大】な計画を語る。|そうだい",
+"遺留品を【捜索】する。|そうさく",
+"文章の途中に語句を【挿入】する。|そうにゅう",
+"【法曹】界を目指して勉強する。|ほうそう",
+"事故のショックで記憶を【喪失】した。|そうしつ",
+"【水槽】で金魚を飼う。|すいそう",
+"近隣の【騒音】に悩まされる。|そうおん",
+"お中元の【贈答】品を選ぶ。|ぞうとう",
+"景気回復を【促進】する政策。|そくしん",
+"【忍耐】強く結果を待つ。|にんたい",
+"どんな時も【泰然】として動じない。|たいぜん",
+"【胎児】の成長を見守る。|たいじ",
+"犯人をその場で【逮捕】した。|たいほ",
+"【卓越】した技術を持つ職人。|たくえつ",
+"荒れ地を【開拓】して畑にする。|かいたく",
+"大雨で川が【濁流】と化した。|だくりゅう",
+"依頼を【承諾】する。|しょうだく",
+"つい【愚痴】をこぼした。|ぐち",
+"祖父は【畜産】農家を営む。|ちくさん",
+"空気の主成分は【窒素】だ。|ちっそ",
+"【抽象】的な議論が続く。|ちゅうしょう",
+"両者の案を【折衷】する。|せっちゅう",
+"青銅で【鋳造】された像。|ちゅうぞう",
+"美術館で【彫刻】を鑑賞する。|ちょうこく",
+"山頂からの【眺望】がすばらしい。|ちょうぼう",
+"魚が水面で【跳躍】する。|ちょうやく",
+"会費を【徴収】する。|ちょうしゅう",
+"彼は長い【沈黙】を破った。|ちんもく",
+"遺跡で【貝塚】が発掘された。|かいづか",
+"証拠書類の【呈示】を求める。|ていじ",
+"【法廷】で証言する。|ほうてい",
+"広い【邸宅】が建ち並ぶ。|ていたく",
+"老舗の【料亭】で会食する。|りょうてい",
+"条約を【締結】する。|ていけつ",
+"【徹底】的に調べ上げる。|てってい",
+"【宮殿】の庭園を散策する。|きゅうでん",
+"夜空に【北斗】七星が見える。|ほくと",
+"外壁を新しく【塗装】する。|とそう",
+"路面が【凍結】して滑りやすい。|とうけつ",
+"【唐突】な質問に戸惑う。|とうとつ",
+"鋭い【洞察】力を持つ。|どうさつ",
+"原油価格が【高騰】する。|こうとう",
+"戸籍【謄本】を取り寄せる。|とうほん",
+"【篤志】家による寄付が続く。|とくし",
+"部隊が国境付近に【駐屯】する。|ちゅうとん",
+"寒さに【鈍感】な人。|どんかん",
+"【尼僧】が修行に励む。|にそう",
+"【丁寧】な説明に感謝する。|ていねい",
+"【粘着】テープで固定する。|ねんちゃく",
+"果汁を【濃縮】する。|のうしゅく",
+"天下の【覇権】を争う。|はけん",
+"道を尋ねてきた【老婆】を案内した。|ろうば",
+"損害【賠償】を請求する。|ばいしょう",
+"【伯爵】の屋敷を訪ねる。|はくしゃく",
+"【薄情】な人だと言われた。|はくじょう",
+"【船舶】の出入りが多い港。|せんぱく",
+"【漠然】とした不安を覚える。|ばくぜん",
+"親の【束縛】から解放された。|そくばく",
+"要点を【抜粋】して読む。|ばっすい",
+"同行者を【同伴】する。|どうはん",
+"患者を病院に【搬送】する。|はんそう",
+"【野蛮】な行為を非難する。|やばん",
+"経済の【基盤】を固める。|きばん",
+"新曲を初めて【披露】する。|ひろう",
+"【微妙】な違いに気づく。|びみょう",
+"【匹敵】する実力の持ち主。|ひってき",
+"ホルモンの【分泌】が盛んになる。|ぶんぴつ|ぶんぴ",
+"式典に【来賓】を迎える。|らいひん",
+"刺激に【敏感】に反応する。|びんかん",
+"【腐敗】した政治を正す。|ふはい",
+"固定資産税の【賦課】。|ふか",
+"ピアノの【楽譜】を読む。|がくふ",
+"物語に【伏線】を張る。|ふくせん",
+"水が【沸騰】する。|ふっとう",
+"二つの町が【併合】された。|へいごう",
+"【偏見】にとらわれない。|へんけん",
+"【普遍】的な価値を持つ。|ふへん",
+"アルバイトを【募集】する。|ぼしゅう",
+"毎日の収支を【帳簿】につける。|ちょうぼ",
+"【邦楽】の演奏会に行く。|ほうがく",
+"神社に絵馬を【奉納】する。|ほうのう",
+"新年の【抱負】を語る。|ほうふ",
+"【細胞】が分裂する。|さいぼう",
+"有名な絵を【模倣】する。|もほう",
+"祖母は【裁縫】が得意だ。|さいほう",
+"栄養が【欠乏】する。|けつぼう",
+"工事の進行を【妨害】する。|ぼうがい",
+"夏は【冷房】を入れる。|れいぼう",
+"【脂肪】を燃焼させる。|しぼう",
+"【某氏】の談話が載った。|ぼうし",
+"カエルを【解剖】する。|かいぼう",
+"【紡績】工場で働く。|ぼうせき",
+"空気が温まると【膨張】する。|ぼうちょう",
+"転んで全身に【打撲】を負った。|だぼく",
+"【素朴】な味わいの菓子。|そぼく",
+"宝石を【研磨】する。|けんま",
+"古い道具が土に【埋没】した。|まいぼつ",
+"のどの【粘膜】が荒れる。|ねんまく",
+"好みの【銘柄】を選ぶ。|めいがら",
+"雑草が【繁茂】する。|はんも",
+"思わぬ【盲点】を突かれた。|もうてん",
+"体力の【消耗】が激しい。|しょうもう",
+"【妄想】にとらわれる。|もうそう",
+"情報を【網羅】した事典。|もうら",
+"家の【紋章】を刻む。|もんしょう",
+"【厄介】な問題が起きた。|やっかい",
+"【躍動】感あふれる演技。|やくどう",
+"【愉快】な話に笑い合う。|ゆかい",
+"傷が完全に【治癒】した。|ちゆ",
+"古い屋敷に【幽霊】が出る。|ゆうれい",
+"【悠久】の歴史を感じる。|ゆうきゅう",
+"時間に【余裕】を持つ。|よゆう",
+"【誘惑】に負けてしまった。|ゆうわく",
+"二つの文化が【融合】する。|ゆうごう",
+"【名誉】を守るために戦う。|めいよ",
+"砂糖が水に【溶解】する。|ようかい",
+"伝統的な【舞踊】を披露する。|ぶよう",
+"【窯業】で栄えた町。|ようぎょう",
+"弱者の人権を【擁護】する。|ようご",
+"【謡曲】を習う。|ようきょく",
+"【翌朝】早く出発する。|よくあさ",
+"【酪農】を営む家に生まれた。|らくのう",
+"余白の【欄外】に注記する。|らんがい",
+"アルバイトの【履歴】書を書く。|りれき",
+"【硫酸】は強い酸だ。|りゅうさん",
+"【捕虜】を解放する。|ほりょ",
+"なだらかな【丘陵】地帯が続く。|きゅうりょう",
+"【食糧】の確保が急務だ。|しょくりょう",
+"高い【倫理】観を養う。|りんり",
+"野球で【盗塁】に成功した。|とうるい",
+"【累積】赤字が膨らむ。|るいせき",
+"規則を【励行】する。|れいこう",
+"【零細】企業が多い地域。|れいさい",
+"死者の【霊魂】を慰める。|れいこん",
+"他国に【隷属】させられる。|れいぞく",
+"【廉価】版の辞書を買う。|れんか",
+"水道管の【漏水】事故。|ろうすい",
+"【浪費】を戒める。|ろうひ",
+"詩の【朗読】会に出る。|ろうどく",
+"砂上の【楼閣】のような計画。|ろうかく"
+];
+
+const J2_KUN = [
+"荷物を丁寧に【扱う】。|あつかう",
+"落ち込む友人を【慰める】。|なぐさめる",
+"和歌を一首【詠む】。|よむ",
+"師と【仰ぐ】人に会う。|あおぐ",
+"服の【襟】を正す。|えり",
+"部屋の【隅】を掃除する。|すみ",
+"同じ失敗を【繰り返す】。|くりかえす",
+"春の風が【薫る】。|かおる",
+"人を【恨む】のはやめよう。|うらむ",
+"のどが【渇く】。|かわく",
+"敵が背後から【襲う】。|おそう",
+"山で【狩り】をする。|かり",
+"予算を【据え置く】。|すえおく",
+"秋の空が【澄む】。|すむ",
+"娘の【婿】を迎える。|むこ",
+"神に固く【誓う】。|ちかう",
+"助けを【請う】。|こう",
+"別れが【惜しい】。|おしい",
+"祖母が【扇】を広げる。|おうぎ",
+"ビールの【栓】を抜く。|せん",
+"世事に【疎い】。|うとい",
+"平和の【礎】を築く。|いしずえ",
+"花瓶に花を【挿す】。|さす",
+"【喪】に服する。|も",
+"池に【藻】が茂る。|も",
+"子供たちが【騒ぐ】。|さわぐ",
+"友に言葉を【贈る】。|おくる",
+"注意を【促す】。|うながす",
+"苦痛に【耐える】。|たえる",
+"高い【滝】を見上げる。|たき",
+"水が【濁る】。|にごる",
+"【但し】書きを読む。|ただし",
+"木で仏像を【彫る】。|ほる",
+"遠くの景色を【眺める】。|ながめる",
+"川で魚を【釣る】。|つる",
+"高く【跳ぶ】。|とぶ",
+"【珍しい】鳥を見かけた。|めずらしい",
+"夕日が海に【沈む】。|しずむ",
+"野菜を塩に【漬ける】。|つける",
+"広さは約五【坪】だ。|つぼ",
+"ネクタイを【締める】。|しめる",
+"寒さで手が【凍える】。|こごえる",
+"葉を光に【透かす】。|すかす",
+"空が【曇る】。|くもる",
+"動きが【鈍い】。|にぶい",
+"人目を【忍ぶ】。|しのぶ",
+"荷物をひもで【縛る】。|しばる",
+"危険を【伴う】作業。|ともなう",
+"船が【帆】を張る。|ほ",
+"畑に【苗】を植える。|なえ",
+"空き【瓶】を回収する。|びん",
+"魚が【腐る】。|くさる",
+"視線を【伏せる】。|ふせる",
+"考えが【偏る】。|かたよる",
+"稲の【穂】が実る。|ほ",
+"不満が【募る】。|つのる",
+"恩師を【慕う】。|したう",
+"大きな夢を【抱く】。|いだく",
+"子どもを【褒める】。|ほめる",
+"高い【峰】が連なる。|みね",
+"ボタンを【縫う】。|ぬう",
+"資源が【乏しい】。|とぼしい",
+"進行を【妨げる】。|さまたげる",
+"ぶどうの【房】が垂れる。|ふさ",
+"風船が【膨らむ】。|ふくらむ",
+"【墨】で字を書く。|すみ",
+"穴を土で【埋める】。|うめる",
+"【岬】の先に灯台が立つ。|みさき",
+"朝の【霧】が晴れる。|きり",
+"草木が【茂る】。|しげる",
+"疲れを【癒す】。|いやす",
+"【誉れ】高い名門校。|ほまれ",
+"氷が【溶ける】。|とける",
+"舞台で華麗に【踊る】。|おどる",
+"【窯】で陶器を焼く。|かま",
+"川辺の【柳】が揺れる。|やなぎ",
+"進むべき道に【惑う】。|まどう",
+"既成の【枠】にとらわれない。|わく",
+"【峠】を越える。|とうげ",
+"【侍】が刀を差す。|さむらい",
+"一人の夜は【寂しい】。|さびしい",
+"【殊に】今日は暑い。|ことに",
+"【唇】を噛む。|くちびる",
+"丈夫な【縄】で結ぶ。|なわ",
+"土鍋で米を【炊く】。|たく"
+];
+
+const J2_SP = [
+"【乳母】に育てられた。|うば",
+"【浮気】を疑われる。|うわき",
+"彼女の【笑顔】に救われた。|えがお",
+"【今年】は暖冬だ。|ことし",
+"祭りで【桟敷】席に座る。|さじき",
+"予定に【差し支える】。|さしつかえる",
+"【五月晴れ】の空。|さつきばれ",
+"頭に【白髪】が増える。|しらが",
+"祭りの【山車】が練り歩く。|だし",
+"【稚児】行列を見る。|ちご",
+"【投網】を打つ。|とあみ",
+"【十重二十重】に取り囲む。|とえはたえ",
+"寺で【読経】が響く。|どきょう",
+"【床屋】で髪を切る。|とこや",
+"幼い頃からの【友達】。|ともだち",
+"【兄さん】に相談する。|にいさん",
+"【姉さん】は先に出かけた。|ねえさん",
+"もうすぐ【二十歳】になる。|はたち",
+"【二十日】の約束。|はつか",
+"【二日】前に届いた。|ふつか",
+"自分の【部屋】を片付ける。|へや",
+"怒って顔が【真っ赤】になる。|まっか",
+"驚いて顔が【真っ青】になる。|まっさお",
+"【息子】が生まれた。|むすこ",
+"【今朝】は早く起きた。|けさ",
+"【一人】で出かける。|ひとり",
+"【二人】で食事をする。|ふたり",
+"【伝馬船】に乗る。|てんません",
+"【数寄屋】造りの茶室。|すきや"
+];
+
+// ===== 準1級（大学・一般程度。約3,000字） =====
+const J1_ON = [
+"【嗚咽】をこらえて立ち尽くした。|おえつ",
+"顔面【蒼白】になって倒れ込んだ。|そうはく",
+"静かに【瞑想】にふける。|めいそう",
+"【渾身】の力を込めて押した。|こんしん",
+"【闊達】な議論が交わされた。|かったつ",
+"人生の岐路で【彷徨】する。|ほうこう",
+"【燦然】と輝く王冠。|さんぜん",
+"【颯爽】と歩く姿が印象的だ。|さっそう",
+"【凛然】とした態度で臨む。|りんぜん",
+"【雅楽】の演奏を聴く。|ががく",
+"家業を継ぐ【嫡男】が生まれた。|ちゃくなん",
+"吉凶【禍福】は予測できない。|かふく",
+"【洛中】洛外の寺を巡る。|らくちゅう",
+"【瑞祥】とされる雲が現れた。|ずいしょう",
+"着物に【刺繍】を施す。|ししゅう",
+"【絢爛】豪華な衣装をまとう。|けんらん",
+"【聡明】な少女が評判になる。|そうめい",
+"転倒して【肋骨】を折った。|ろっこつ",
+"【莫大】な財産を築く。|ばくだい",
+"感染症が【蔓延】する。|まんえん",
+"【贅沢】な暮らしを戒める。|ぜいたく",
+"犯人は闇に紛れて【遁走】した。|とんそう",
+"事件の【顛末】を報告する。|てんまつ",
+"旅立つ友に【餞別】を贈る。|せんべつ",
+"荷物を【梱包】して発送する。|こんぽう",
+"人を【阿呆】呼ばわりしてはいけない。|あほう",
+"【怪訝】な顔で見つめられた。|けげん",
+"【杜撰】な管理が問題となった。|ずさん",
+"【稀代】の名工と称される。|きだい",
+"【碧眼】の少年が笑った。|へきがん",
+"【紺碧】の海を眺める。|こんぺき",
+"反乱の【首魁】が捕らえられた。|しゅかい",
+"事情を【諒承】する。|りょうしょう",
+"【復讐】を誓う。|ふくしゅう",
+"【慧眼】の持ち主と評される。|けいがん",
+"霊が【憑依】したと噂される。|ひょうい",
+"新人を主役に【抜擢】する。|ばってき",
+"仕事を【斡旋】する。|あっせん",
+"【流暢】な英語で話す。|りゅうちょう",
+"【烏合】の衆では勝てない。|うごう",
+"【猥雑】な街の雰囲気。|わいざつ",
+"切磋【琢磨】して技を磨く。|たくま",
+"【一瞥】をくれて立ち去る。|いちべつ",
+"【祈祷】を受ける。|きとう",
+"態度が【豹変】する。|ひょうへん",
+"読書の【醍醐味】を味わう。|だいごみ",
+"客に【馳走】をふるまう。|ちそう",
+"【芭蕉】の句を鑑賞する。|ばしょう",
+"【釉薬】をかけて焼く。|うわぐすり|ゆうやく"
+];
+
+const J1_KUN = [
+"小動物が物音に【怯える】。|おびえる",
+"泣く子を【宥める】。|なだめる",
+"機会を【窺う】。|うかがう",
+"対立を【煽る】。|あおる",
+"彼女に【惚れる】。|ほれる",
+"正座で足が【痺れる】。|しびれる",
+"耳元で【囁く】。|ささやく",
+"静かに【頷く】。|うなずく",
+"独り言を【呟く】。|つぶやく",
+"石に【躓く】。|つまずく",
+"話が【拗れる】。|こじれる",
+"虫歯が歯を【蝕む】。|むしばむ",
+"鳥が目の前を【掠める】。|かすめる",
+"傷口を【抉る】。|えぐる",
+"夕食を手早く【拵える】。|こしらえる",
+"部屋の中を【覗く】。|のぞく",
+"糸が【縺れる】。|もつれる",
+"茶道を【嗜む】。|たしなむ",
+"悪事に【唆す】。|そそのかす",
+"薪が【燻る】。|くすぶる",
+"カレンダーを【捲る】。|めくる",
+"傷が【疼く】。|うずく",
+"チョコレートが【蕩ける】。|とろける",
+"他人を【貶す】。|けなす",
+"色が【褪せる】。|あせる",
+"人を【騙す】。|だます",
+"雷鳴が【轟く】。|とどろく",
+"手を【繋ぐ】。|つなぐ",
+"服を【纏う】。|まとう",
+"読書に【耽る】。|ふける",
+"星が【煌めく】。|きらめく",
+"枝に【蕾】が膨らむ。|つぼみ",
+"【嬉しい】知らせが届いた。|うれしい",
+"【賑やか】な町を歩く。|にぎやか",
+"【逞しい】腕を持つ。|たくましい",
+"【姦しい】女たちの声。|かしましい",
+"季節が【廻る】。|めぐる",
+"相手を【睨む】。|にらむ",
+"舟を【漕ぐ】。|こぐ",
+"種を【蒔く】。|まく",
+"薪を【焚く】。|たく",
+"笑みを【湛える】。|たたえる",
+"道を人に【訊く】。|きく",
+"失礼を【詫びる】。|わびる",
+"敷居を【跨ぐ】。|またぐ",
+"お土産を【貰う】。|もらう",
+"【檜】の浴槽に浸かる。|ひのき",
+"境内の【楠】の大木。|くすのき",
+"【榊】を神棚に供える。|さかき",
+"赤い【椿】の花が咲く。|つばき",
+"【柊】の葉は縁がとがっている。|ひいらぎ",
+"【梓】弓を引く。|あずさ",
+"【桐】の箱に収める。|きり",
+"【楓】の葉が赤く染まる。|かえで",
+"【欅】並木を歩く。|けやき",
+"【樫】の木の下で休む。|かし",
+"【梢】で小鳥がさえずる。|こずえ",
+"【蔓】が柱に巻きつく。|つる",
+"【藁】を束ねて縄をなう。|わら",
+"【茸】を採りに山へ入る。|きのこ",
+"【蕨】を摘んで煮る。|わらび",
+"庭に【葵】が咲く。|あおい",
+"【苔】むす石段。|こけ",
+"【鰯】の群れが回遊する。|いわし",
+"【鮪】の刺身を食べる。|まぐろ",
+"【鰹】節を削る。|かつお",
+"【鮭】が川を遡る。|さけ",
+"【鯛】の尾頭付き。|たい",
+"【鯉】のぼりが泳ぐ。|こい",
+"【鰻】丼を食べる。|うなぎ",
+"【蛸】の足は八本ある。|たこ",
+"【蛙】の合唱が聞こえる。|かえる",
+"【蝶】が花に止まる。|ちょう",
+"【雀】が庭でさえずる。|すずめ",
+"【鷹】が空を舞う。|たか",
+"池に【鴨】が浮かぶ。|かも",
+"【雁】が列をなして渡る。|かり",
+"朝から【鶯】が鳴く。|うぐいす",
+"【鴉】が屋根に止まる。|からす",
+"夜の森で【梟】が鳴く。|ふくろう",
+"【蟻】の行列を観察する。|あり",
+"【蝉】の声が降りそそぐ。|せみ",
+"【蜘蛛】が巣を張る。|くも",
+"【蝦】の天ぷらを揚げる。|えび",
+"【蟹】の甲羅を割る。|かに",
+"【鳩】が豆をついばむ。|はと",
+"【鼠】が天井裏を走る。|ねずみ",
+"【鮎】の塩焼き。|あゆ",
+"【隼】のように素早い。|はやぶさ",
+"夜の街灯に【蛾】が集まる。|が",
+"【鳶】が空に輪を描く。|とび",
+"【鯖】の味噌煮を作る。|さば",
+"【甥】が遊びに来た。|おい",
+"【姪】にお年玉を渡す。|めい",
+"【渚】を歩く。|なぎさ",
+"【汀】に寄せる波。|みぎわ",
+"【磯】の香りが漂う。|いそ",
+"深い【淵】に沈む。|ふち",
+"湖の【畔】で休む。|ほとり",
+"都会の【巷】で噂になる。|ちまた",
+"着物の【袂】を押さえる。|たもと",
+"【莢】から豆を出す。|さや",
+"【辻】を曲がる。|つじ",
+"【釘】を打ちつける。|くぎ",
+"【鎧】を身にまとう。|よろい",
+"朝の【霞】がたなびく。|かすみ",
+"葉先から【雫】が落ちる。|しずく",
+"【鞄】を肩にかける。|かばん",
+"ネズミ捕りの【罠】にかかる。|わな",
+"子どもの【躾】を厳しくする。|しつけ",
+"家族の【絆】を深める。|きずな",
+"靴の【紐】を結ぶ。|ひも",
+"空を【翔ける】鳥。|かける",
+"刃に【錆】が浮く。|さび",
+"【籾】殻を燃やす。|もみ",
+"お【粥】をすする。|かゆ",
+"【糠】漬けを食べる。|ぬか",
+"言葉の【綾】で誤解が生じた。|あや",
+"酒の【肴】を用意する。|さかな",
+"【太腿】の筋肉を鍛える。|ふともも",
+"【雛】人形を飾る。|ひな",
+"【袴】をはいて式に出る。|はかま",
+"【諺】を引用して話す。|ことわざ",
+"木の【蔭】で一休みする。|かげ",
+"【眸】の澄んだ少女。|ひとみ",
+"船が【碇】を下ろす。|いかり",
+"【蛤】の吸い物。|はまぐり",
+"【襖】を開ける。|ふすま",
+"仕事は【殆ど】終わった。|ほとんど",
+"記憶が【朧げ】になる。|おぼろげ"
+];
+
+const J1_SP = [
+"【蕎麦】を打つ。|そば",
+"【海苔】を巻く。|のり",
+"【昆布】で出汁をとる。|こんぶ",
+"【林檎】を丸かじりする。|りんご",
+"【南瓜】を煮る。|かぼちゃ",
+"【胡瓜】の漬物。|きゅうり",
+"【茄子】の味噌炒め。|なす",
+"【西瓜】割りを楽しむ。|すいか",
+"【百合】の花を飾る。|ゆり",
+"【山葵】を薬味にする。|わさび",
+"【松茸】のご飯。|まつたけ",
+"【椎茸】を焼く。|しいたけ",
+"【蓮根】のきんぴら。|れんこん",
+"【蒲鉾】を切る。|かまぼこ",
+"【枇杷】の実が熟す。|びわ",
+"【蜜柑】の皮をむく。|みかん",
+"【葡萄】酒を醸造する。|ぶどう",
+"【苺】のショートケーキ。|いちご",
+"【胡麻】油で炒める。|ごま",
+"【紫蘇】の葉を刻む。|しそ",
+"【桔梗】の花が咲く。|ききょう",
+"庭の【牡丹】が咲いた。|ぼたん",
+"【薔薇】の香りが漂う。|ばら",
+"池の端に【菖蒲】が咲く。|しょうぶ|あやめ",
+"【琵琶】の音色に耳を傾ける。|びわ",
+"【珊瑚】礁の海。|さんご",
+"【瑪瑙】の指輪をはめる。|めのう",
+"【琥珀】色に輝く酒。|こはく",
+"【鳳凰】の像が立つ。|ほうおう",
+"【囲炉裏】を囲んで談笑する。|いろり",
+"【箪笥】を整理する。|たんす",
+"古い【行李】を開ける。|こうり",
+"【蝋燭】の灯を消す。|ろうそく",
+"【提灯】をさげて歩く。|ちょうちん",
+"【団扇】であおぐ。|うちわ",
+"【急須】にお茶葉を入れる。|きゅうす",
+"【薬缶】で湯を沸かす。|やかん",
+"【菩薩】像を拝む。|ぼさつ",
+"【釈迦】の教えを学ぶ。|しゃか",
+"【般若】の面をつける。|はんにゃ",
+"【阿弥陀】如来の像。|あみだ",
+"【如来】の教え。|にょらい",
+"【伽藍】が立ち並ぶ。|がらん",
+"【羅漢】の石像。|らかん",
+"【卒塔婆】を立てる。|そとば",
+"【鴨居】に頭をぶつける。|かもい",
+"【団栗】を拾う。|どんぐり"
+];
+
+// ===== 1級（大学・一般程度。約6,000字） =====
+const L1_ON = [
+"計画が思わぬ【蹉跌】を来した。|さてつ",
+"議論の中で意見の【齟齬】が生じた。|そご",
+"【瑕疵】のある商品を返品する。|かし",
+"【贖罪】のために奉仕活動を続ける。|しょくざい",
+"毎日の騒音に【辟易】する。|へきえき",
+"周囲の【顰蹙】を買う。|ひんしゅく",
+"【瀟洒】な洋館が建っている。|しょうしゃ",
+"【躊躇】せずに決断する。|ちゅうちょ",
+"食べ物をよく【咀嚼】する。|そしゃく",
+"十年ぶりの【邂逅】を果たす。|かいこう",
+"愛児を失い【慟哭】する。|どうこく",
+"博識な彼が【蘊蓄】を傾ける。|うんちく",
+"職人としての【矜持】を保つ。|きょうじ",
+"思いがけない【僥倖】に恵まれた。|ぎょうこう",
+"悪党が町を【跋扈】する。|ばっこ",
+"【蠱惑】的な笑みを浮かべる。|こわく",
+"【吝嗇】な人物と評される。|りんしょく",
+"【狡猾】な手口で人をだます。|こうかつ",
+"【瑣末】な問題にこだわる。|さまつ",
+"【煩瑣】な手続きに追われる。|はんさ",
+"本心を隠して【韜晦】する。|とうかい",
+"【慇懃】無礼な態度を取られた。|いんぎん",
+"酒が入ると【饒舌】になる。|じょうぜつ",
+"他人の作品を【剽窃】する。|ひょうせつ",
+"王位を【簒奪】する。|さんだつ",
+"【詭弁】を弄して追及をかわす。|きべん",
+"【欺瞞】に満ちた説明。|ぎまん",
+"【鬱蒼】とした森を抜ける。|うっそう",
+"在りし日の面影が【彷彿】とする。|ほうふつ",
+"成長ぶりは【瞠目】に値する。|どうもく",
+"列車が【驀進】する。|ばくしん",
+"【稀有】な才能に恵まれる。|けう",
+"【毀誉褒貶】が相半ばする人物。|きよほうへん",
+"【魑魅魍魎】が跋扈する世界。|ちみもうりょう",
+"遺体を【荼毘】に付す。|だび",
+"突然の【驟雨】に見舞われた。|しゅうう",
+"財産を【蕩尽】してしまう。|とうじん",
+"【酩酊】した客が絡んでくる。|めいてい",
+"【憔悴】しきった顔で帰宅した。|しょうすい",
+"【悲愴】な決意を語る。|ひそう",
+"【懊悩】の日々を送る。|おうのう",
+"良心の【呵責】に苦しむ。|かしゃく",
+"脅されて【恫喝】された。|どうかつ",
+"財政が【逼迫】する。|ひっぱく",
+"社会に【擾乱】を招く。|じょうらん",
+"自宅で【蟄居】を命じられた。|ちっきょ",
+"新しい時代の【黎明】期。|れいめい",
+"名門の【凋落】が始まった。|ちょうらく",
+"【僭越】ながら乾杯の音頭を取る。|せんえつ",
+"この作品が運動の【嚆矢】とされる。|こうし",
+"漁船が領海内で【拿捕】された。|だほ",
+"支持者に【檄文】を飛ばす。|げきぶん",
+"無差別の【殺戮】が繰り返された。|さつりく",
+"家畜を【屠殺】する。|とさつ",
+"【刎頸】の交わりを結ぶ。|ふんけい",
+"時代の【趨勢】を見極める。|すうせい",
+"【紆余曲折】を経て決まった。|うよきょくせつ",
+"【艱難】辛苦に耐える。|かんなん",
+"成功する【蓋然】性が高い。|がいぜん",
+"古い文献を【渉猟】する。|しょうりょう",
+"【牽強付会】の説を唱える。|けんきょうふかい",
+"足が【痙攣】して動けない。|けいれん",
+"【忌憚】のない意見を述べる。|きたん",
+"決断を前に【逡巡】する。|しゅんじゅん",
+"【蒙昧】な民衆を教え導く。|もうまい",
+"【偏頗】な扱いに抗議する。|へんぱ",
+"【瓢箪】から駒が出る。|ひょうたん",
+"砂漠で【蜃気楼】を見た。|しんきろう",
+"【髑髏】の模様の旗。|どくろ",
+"【怨嗟】の声が上がる。|えんさ",
+"根拠のない【誹謗】中傷を受ける。|ひぼう",
+"【冤罪】を晴らす。|えんざい",
+"改革の【隘路】を打開する。|あいろ",
+"自家【撞着】に陥る。|どうちゃく",
+"組織内に【軋轢】が生じる。|あつれき",
+"弱者への【憐憫】の情を抱く。|れんびん",
+"部下を【叱咤】激励する。|しった",
+"情報が【輻輳】して混乱する。|ふくそう",
+"【頽廃】的な雰囲気が漂う。|たいはい",
+"三者による【鼎談】を行う。|ていだん",
+"その場しのぎの【弥縫策】にすぎない。|びほうさく",
+"心配は【杞憂】に終わった。|きゆう",
+"事実を【歪曲】して伝える。|わいきょく",
+"腸の【蠕動】運動が活発になる。|ぜんどう",
+"【爬虫類】を研究する。|はちゅうるい",
+"【蟷螂】の斧で立ち向かう。|とうろう"
+];
+
+const L1_KUN = [
+"返事を【躊躇う】。|ためらう",
+"暗がりで【蠢く】影。|うごめく",
+"知らないと【嘯く】。|うそぶく",
+"木の葉が風に【戦ぐ】。|そよぐ",
+"藁にも【縋る】思いで頼む。|すがる",
+"眉を【顰める】。|ひそめる",
+"庭の草を【毟る】。|むしる",
+"額に手を【翳す】。|かざす",
+"無礼な態度を【窘める】。|たしなめる",
+"罪の意識に【苛まれる】。|さいなまれる",
+"王を【諫める】家臣。|いさめる",
+"規則を【蔑ろ】にする。|ないがしろ",
+"人目を【憚る】。|はばかる",
+"失敗を【詰る】。|なじる",
+"相手を口汚く【罵る】。|ののしる",
+"人前で人を【辱める】。|はずかしめる",
+"弱者を【嬲る】。|なぶる",
+"夜の街を【彷徨う】。|さまよう",
+"鎌首を【擡げる】蛇。|もたげる",
+"稲穂が風に【靡く】。|なびく",
+"子供が【拗ねる】。|すねる",
+"熱い血が【滾る】。|たぎる",
+"道端に【蹲る】。|うずくまる",
+"恐怖に【慄く】。|おののく",
+"怒りで声が【戦慄く】。|わななく",
+"【鄙びた】温泉宿に泊まる。|ひなびた",
+"人を【疎む】。|うとむ",
+"民を【虐げる】。|しいたげる",
+"他人の失敗を【嗤う】。|わらう",
+"古文書を【繙く】。|ひもとく",
+"菓子を指で【抓む】。|つまむ",
+"身を【擲つ】覚悟で挑む。|なげうつ",
+"落ち葉を【踏み躙る】。|ふみにじる",
+"重みで枝が【撓む】。|たわむ",
+"冗談で友人を【揶揄う】。|からかう",
+"麺を勢いよく【啜る】。|すする",
+"飴を【舐める】。|なめる",
+"罪人を【搦め捕る】。|からめとる",
+"長年の恨みが【蟠る】。|わだかまる",
+"【流離う】旅人。|さすらう"
+];
+
+const L1_SP = [
+"【海豚】の群れが泳ぐ。|いるか",
+"【海月】が漂う。|くらげ",
+"【向日葵】の畑が広がる。|ひまわり",
+"【蒲公英】の綿毛が飛ぶ。|たんぽぽ",
+"【紫陽花】が雨に濡れる。|あじさい",
+"【百日紅】の花が咲く。|さるすべり",
+"【木耳】入りの炒め物。|きくらげ",
+"【鬼灯】市に出かける。|ほおずき",
+"【躑躅】の名所を訪れる。|つつじ",
+"【山茶花】が咲く。|さざんか",
+"【雲雀】が空高く鳴く。|ひばり",
+"【時鳥】の声を聞く。|ほととぎす",
+"【啄木鳥】が木をつつく。|きつつき",
+"【鶺鴒】が尾を振る。|せきれい",
+"【海鼠】の酢の物。|なまこ",
+"【栗鼠】が木に登る。|りす",
+"【土筆】を摘む。|つくし",
+"【薄荷】の香りがする。|はっか",
+"【長閑】な春の日。|のどか",
+"【灰汁】を取りながら煮る。|あく",
+"【長月】の空が澄む。|ながつき",
+"【皐月】晴れの日。|さつき",
+"【霜月】の朝は冷える。|しもつき",
+"【如月】の寒さ。|きさらぎ",
+"【水無月】の雨。|みなづき",
+"【神無月】は旧暦の十月だ。|かんなづき",
+"【行灯】の灯りがともる。|あんどん",
+"【暖簾】をくぐる。|のれん",
+"庭に【築山】を設ける。|つきやま",
+"【流鏑馬】神事を見物する。|やぶさめ",
+"【相槌】を打つ。|あいづち",
+"【烏賊】の塩辛。|いか",
+"【秋刀魚】を焼く。|さんま",
+"【公魚】釣りを楽しむ。|わかさぎ",
+"【河豚】料理を味わう。|ふぐ",
+"【海老】の天ぷらを揚げる。|えび",
+"【玉蜀黍】を茹でる。|とうもろこし",
+"【馬酔木】の花が咲く。|あせび",
+"【彼岸花】が咲く。|ひがんばな",
+"【金木犀】の香り。|きんもくせい",
+"【沈丁花】の香り。|じんちょうげ",
+"【蝸牛】が這う。|かたつむり",
+"【守宮】が壁に張りつく。|やもり",
+"【蜥蜴】の尻尾。|とかげ",
+"【蝙蝠】が飛ぶ。|こうもり",
+"【鸚鵡】が人の言葉を話す。|おうむ",
+"【駱駝】の背に乗る。|らくだ",
+"【河馬】が大きな口を開ける。|かば",
+"【海象】の牙。|せいうち",
+"【蟋蟀】の声が聞こえる。|こおろぎ",
+"【蜻蛉】が飛ぶ。|とんぼ",
+"【欠伸】をかみ殺す。|あくび",
+"【蝦蛄】の寿司。|しゃこ"
+];
+
 /* ================= ユーティリティ ================= */
 const $ = (s) => document.querySelector(s);
-const parse = (arr, c) => arr.map((r) => { const p = r.split('|'); return { s: p[0], a: p.slice(1), c: c }; });
-const BANK = [].concat(parse(ON, 'on'), parse(KUN, 'kun'), parse(SP, 'sp'));
+// 級の定義（bit は、引き継ぎコードに「どの級を含むか」を記すのに使う）
+const LEVELS = [
+  { k: 'j2', name: '準2級', bit: 1, pass: 70, desc: '高校在学程度（常用漢字およそ1,950字）' },
+  { k: '2',  name: '2級',   bit: 2, pass: 80, desc: '高校卒業・大学・一般程度（常用漢字2,136字すべて）' },
+  { k: 'j1', name: '準1級', bit: 4, pass: 80, desc: '大学・一般程度（約3,000字。人名用漢字などを含む）' },
+  { k: '1',  name: '1級',   bit: 8, pass: 80, desc: '大学・一般程度（約6,000字。表外漢字を含む難問）' }
+];
+const LV = {};
+LEVELS.forEach((l) => { LV[l.k] = l; });
+const parse = (arr, c, lv) => arr.map((r) => { const p = r.split('|'); return { s: p[0], a: p.slice(1), c: c, lv: lv }; });
+const BANK = [].concat(
+  parse(J2_ON, 'on', 'j2'), parse(J2_KUN, 'kun', 'j2'), parse(J2_SP, 'sp', 'j2'),
+  parse(ON, 'on', '2'), parse(KUN, 'kun', '2'), parse(SP, 'sp', '2'),
+  parse(J1_ON, 'on', 'j1'), parse(J1_KUN, 'kun', 'j1'), parse(J1_SP, 'sp', 'j1'),
+  parse(L1_ON, 'on', '1'), parse(L1_KUN, 'kun', '1'), parse(L1_SP, 'sp', '1')
+);
+const QBYS = new Map(BANK.map((q) => [q.s, q]));
 const CAT = { on: '音読み', kun: '訓読み', sp: '特殊' };
+function lvBank(lv) { return BANK.filter((q) => q.lv === lv); }
 
 function norm(s) {
   return String(s).normalize('NFKC').replace(/[\s\u3000]/g, '').replace(/[\u30A1-\u30F6]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60));
 }
+
+/* ---- 文を意味のまとまりで折り返す ----
+   「ひらがなの直後に漢字・カタカナが来る」位置に改行の候補（<wbr>）を置き、
+   CSS（word-break: keep-all）と組み合わせて、単語の途中で改行されないようにします。 */
+function isHira(c) { return /[\u3041-\u3096]/.test(c); }
+function isCont(c) { return /[\u30A1-\u30FA\u4E00-\u9FFF\u3005\u3006\u30F6]/.test(c); }
 function frag(s) {
   const f = document.createDocumentFragment();
-  const re = /【(.+?)】/g; let last = 0, m;
-  while ((m = re.exec(s))) {
-    if (m.index > last) f.append(s.slice(last, m.index));
-    const sp = document.createElement('span'); sp.className = 't'; sp.textContent = m[1]; f.append(sp);
-    last = re.lastIndex;
+  let buf = '', tbuf = '', inT = false, prev = '';
+  const flush = () => { if (buf) { f.append(buf); buf = ''; } };
+  for (const ch of s) {
+    if (ch === '【' && !inT) {
+      flush();
+      if (isHira(prev)) f.append(document.createElement('wbr'));
+      inT = true; tbuf = '';
+      continue;
+    }
+    if (ch === '】' && inT) {
+      const sp = document.createElement('span'); sp.className = 't'; sp.textContent = tbuf; f.append(sp);
+      inT = false; prev = tbuf.charAt(tbuf.length - 1);
+      continue;
+    }
+    if (inT) { tbuf += ch; continue; }
+    if (isHira(prev) && isCont(ch)) { flush(); f.append(document.createElement('wbr')); }
+    buf += ch; prev = ch;
   }
-  if (last < s.length) f.append(s.slice(last));
+  flush();
   return f;
 }
+function phrasify(root) {
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  let n;
+  while ((n = w.nextNode())) nodes.push(n);
+  nodes.forEach((t) => {
+    const v = t.nodeValue;
+    if (t.parentElement && t.parentElement.closest('.nb')) return;   // 改行させない句の中には候補を入れない
+    if (!/[\u3041-\u3096][\u30A1-\u30FA\u4E00-\u9FFF\u3005\u3006\u30F6]/.test(v)) return;
+    const f = document.createDocumentFragment();
+    let buf = '';
+    for (let i = 0; i < v.length; i++) {
+      if (i > 0 && isHira(v.charAt(i - 1)) && isCont(v.charAt(i))) { f.append(buf); buf = ''; f.append(document.createElement('wbr')); }
+      buf += v.charAt(i);
+    }
+    f.append(buf);
+    t.replaceWith(f);
+  });
+}
+function setText(node, text) { node.textContent = text; phrasify(node); }
 function el(tag, cls, text) {
   const e = document.createElement(tag);
   if (cls) e.className = cls;
@@ -916,65 +1819,139 @@ function stOf(q) { const r = rec.get(q.s); return r ? r.s : ''; }
 function isDone(q) { return stOf(q) === 'd'; }
 function isWeak(q) { return stOf(q) === 'w'; }
 function nowMin() { return Math.floor(Date.now() / 60000); }
-function localCounts() {
+function localCounts(lv) {
   let d = 0, w = 0;
-  BANK.forEach((q) => { const st = stOf(q); if (st === 'd') d++; else if (st === 'w') w++; });
+  BANK.forEach((q) => {
+    if (lv && q.lv !== lv) return;
+    const st = stOf(q);
+    if (st === 'd') d++; else if (st === 'w') w++;
+  });
   return { d: d, w: w };
 }
 
-/* ---- 引き継ぎコードの作成・解読（画面に依存しない部分） ----
-   コード = "kk2.1." + 問題ごとの15文字（問題ID8桁16進 + 状態1字 + 時刻6桁36進）… + "." + チェック値8桁 */
-const CODE_PREFIX = 'kk2.1.';
-const ITEM_LEN = 15;
+/* ---- 選んでいる級（このブラウザに覚えておく） ---- */
+const LVK = 'kanken2-yomi-level-v1';
+let curLv = (function () { const v = lsGet(LVK); return (v && Object.prototype.hasOwnProperty.call(LV, v)) ? v : '2'; })();
+
+/* ---- 引き継ぎコード（画面に依存しない部分） ----
+   新形式  "kk3." + 含む級(16進1字) + グループ… + "." + チェック値(16進8字)
+     グループ ＝ 状態(d=正解済み / w=苦手)1字 + 記録時刻6字(36進) + 件数3字(36進) + 問題ID 6字(36進)×件数
+     同じ状態・同じ時刻（＝同じ回に解いた）問題を1グループにまとめ、IDも短くして、コードを短くしています。
+   旧形式  "kk2.1."（2級だけの版）も読み込めます。 */
+const CODE3 = 'kk3.';
+const CODE2 = 'kk2.1.';
 function fnv32(str) {
   let h = 0x811c9dc5;
   for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
   return (h >>> 0).toString(16).padStart(8, '0');
 }
-const QID = new Map();
-BANK.forEach((q) => { q.id = fnv32(q.s); if (QID.has(q.id) && window.console) console.warn('ID衝突', q.s); QID.set(q.id, q); });
-function buildCode() {
-  let body = '', nd = 0, nw = 0;
+function id30(str) { return (parseInt(fnv32(str), 16) & 0x3fffffff).toString(36).padStart(6, '0'); }
+const QID = new Map();       // 6字ID -> 問題
+const QID_OLD = new Map();   // 旧形式の8桁ID -> 問題
+BANK.forEach((q) => {
+  QID_OLD.set(fnv32(q.s), q);
+  let k = 0, id;
+  do { id = id30(k ? q.s + '#' + k : q.s); k++; } while (QID.has(id));   // 万一の衝突は、決まった順で付け直す
+  q.id = id;
+  QID.set(id, q);
+});
+
+function buildCode(lvSet) {
+  let mask = 0;
+  LEVELS.forEach((l) => { if (lvSet.has(l.k)) mask |= l.bit; });
+  const groups = new Map();
+  let nd = 0, nw = 0;
   BANK.forEach((q) => {
+    if (!lvSet.has(q.lv)) return;
     const r = rec.get(q.s);
     if (!r) return;
-    body += q.id + r.s + r.t.toString(36).padStart(6, '0');
+    const key = r.s + '|' + r.t;
+    let g = groups.get(key);
+    if (!g) { g = { s: r.s, t: r.t, ids: [] }; groups.set(key, g); }
+    g.ids.push(q.id);
     if (r.s === 'd') nd++; else nw++;
   });
-  return { code: CODE_PREFIX + body + '.' + fnv32(CODE_PREFIX + body), nd: nd, nw: nw };
+  const list = Array.from(groups.values()).sort((a, b) => (a.s === b.s ? a.t - b.t : (a.s < b.s ? -1 : 1)));
+  let body = '';
+  list.forEach((g) => { body += g.s + g.t.toString(36).padStart(6, '0') + g.ids.length.toString(36).padStart(3, '0') + g.ids.join(''); });
+  const head = CODE3 + mask.toString(16) + body;
+  return { code: head + '.' + fnv32(head), nd: nd, nw: nw, mask: mask };
 }
-function parseCode(text) {
-  const t = String(text).normalize('NFKC').replace(/[\s\u200b-\u200d\ufeff]+/g, '').toLowerCase();
-  if (t.indexOf('kk2.') !== 0) return { err: 'format' };
-  if (t.indexOf(CODE_PREFIX) !== 0) return { err: 'version' };
-  const dot = t.lastIndexOf('.');
-  if (dot < CODE_PREFIX.length) return { err: 'broken' };
-  const body = t.slice(CODE_PREFIX.length, dot);
-  const chk = t.slice(dot + 1);
-  if (!/^[0-9a-f]{8}$/.test(chk) || fnv32(CODE_PREFIX + body) !== chk) return { err: 'broken' };
-  if (body.length % ITEM_LEN !== 0) return { err: 'format' };
-  const byId = new Map();
-  for (let i = 0; i < body.length; i += ITEM_LEN) {
-    const m = /^([0-9a-f]{8})([dw])([0-9a-z]{6})$/.exec(body.slice(i, i + ITEM_LEN));
-    if (!m) return { err: 'format' };
-    const it = { id: m[1], s: m[2], t: parseInt(m[3], 36) };
-    const old = byId.get(it.id);
-    if (!old || it.t > old.t || (it.t === old.t && it.s === 'w')) byId.set(it.id, it);
-  }
+function normCode(text) { return String(text).normalize('NFKC').replace(/[\s\u200b-\u200d\ufeff]+/g, '').toLowerCase(); }
+function keepNewer(byId, it) {
+  const old = byId.get(it.id);
+  if (!old || it.t > old.t || (it.t === old.t && it.s === 'w')) byId.set(it.id, it);
+}
+function finish(mask, byId, idMap) {
   const items = [];
   let unknown = 0, nd = 0, nw = 0;
+  const by = {};
+  LEVELS.forEach((l) => { by[l.k] = { d: 0, w: 0 }; });
   byId.forEach((it) => {
-    const q = QID.get(it.id);
-    if (!q) { unknown++; return; }
+    const q = idMap.get(it.id);
+    if (!q || !(mask & LV[q.lv].bit)) { unknown++; return; }
     items.push({ q: q, s: it.s, t: it.t });
-    if (it.s === 'd') nd++; else nw++;
+    if (it.s === 'd') { nd++; by[q.lv].d++; } else { nw++; by[q.lv].w++; }
   });
-  return { items: items, unknown: unknown, nd: nd, nw: nw };
+  return { mask: mask, items: items, unknown: unknown, nd: nd, nw: nw, by: by };
 }
-function applyImport(items, mode) {
-  if (mode === 'replace') rec = new Map();
+function parseV3(t) {
+  const dot = t.lastIndexOf('.');
+  if (dot < CODE3.length + 1) return { err: 'broken' };
+  const head = t.slice(0, dot), chk = t.slice(dot + 1);
+  if (!/^[0-9a-f]{8}$/.test(chk) || fnv32(head) !== chk) return { err: 'broken' };
+  const mask = parseInt(head.charAt(CODE3.length), 16);
+  if (!(mask >= 1 && mask <= 15)) return { err: 'format' };
+  const body = head.slice(CODE3.length + 1);
+  const byId = new Map();
+  let i = 0;
+  while (i < body.length) {
+    if (i + 10 > body.length) return { err: 'format' };
+    const st = body.charAt(i), tm = body.substr(i + 1, 6), cn = body.substr(i + 7, 3);
+    if ((st !== 'd' && st !== 'w') || !/^[0-9a-z]{6}$/.test(tm) || !/^[0-9a-z]{3}$/.test(cn)) return { err: 'format' };
+    const n = parseInt(cn, 36), t0 = parseInt(tm, 36);
+    i += 10;
+    if (i + n * 6 > body.length) return { err: 'format' };
+    for (let j = 0; j < n; j++) {
+      const id = body.substr(i + j * 6, 6);
+      if (!/^[0-9a-z]{6}$/.test(id)) return { err: 'format' };
+      keepNewer(byId, { id: id, s: st, t: t0 });
+    }
+    i += n * 6;
+  }
+  return finish(mask, byId, QID);
+}
+function parseV2(t) {
+  const dot = t.lastIndexOf('.');
+  if (dot < CODE2.length) return { err: 'broken' };
+  const body = t.slice(CODE2.length, dot), chk = t.slice(dot + 1);
+  if (!/^[0-9a-f]{8}$/.test(chk) || fnv32(CODE2 + body) !== chk) return { err: 'broken' };
+  if (body.length % 15 !== 0) return { err: 'format' };
+  const byId = new Map();
+  for (let i = 0; i < body.length; i += 15) {
+    const m = /^([0-9a-f]{8})([dw])([0-9a-z]{6})$/.exec(body.slice(i, i + 15));
+    if (!m) return { err: 'format' };
+    keepNewer(byId, { id: m[1], s: m[2], t: parseInt(m[3], 36) });
+  }
+  return finish(LV['2'].bit, byId, QID_OLD);   // 旧形式は2級だけ
+}
+function parseCode(text) {
+  const t = normCode(text);
+  if (t.indexOf(CODE3) === 0) return parseV3(t);
+  if (t.indexOf(CODE2) === 0) return parseV2(t);
+  if (/^kk\d/.test(t)) return { err: 'version' };
+  return { err: 'format' };
+}
+function applyImport(parsed, mode) {
+  if (mode === 'replace') {
+    // コードに含まれる級の記録だけを消してから入れる（含まれない級は残す）
+    Array.from(rec.keys()).forEach((k) => {
+      const q = QBYS.get(k);
+      if (q && (parsed.mask & LV[q.lv].bit)) rec.delete(k);
+    });
+  }
   let added = 0, updated = 0;
-  items.forEach((it) => {
+  parsed.items.forEach((it) => {
     const cur = rec.get(it.q.s);
     if (!cur) { rec.set(it.q.s, { s: it.s, t: it.t }); added++; return; }
     if (cur.s === it.s) { if (it.t > cur.t) cur.t = it.t; return; }
@@ -994,15 +1971,24 @@ function show(id) {
 }
 
 /* ================= 開始画面 ================= */
+function applyLevelUI() {
+  const L = LV[curLv];
+  $('#lvTitle').textContent = L.name;
+  setText($('#lvDesc'), L.name + '：' + L.desc + '。');
+  const r = document.querySelector('input[name=level][value="' + curLv + '"]');
+  if (r) r.checked = true;
+}
 function refreshCounts() {
+  const bank = lvBank(curLv);
   const cnt = { all: 0, on: 0, kun: 0, sp: 0 };
-  BANK.forEach((q) => { if (stOf(q) === '') { cnt[q.c]++; cnt.all++; } });
-  const w = BANK.filter(isWeak).length;
-  const d = BANK.filter(isDone).length;
-  $('#doneNote').textContent = (d === 0 && w === 0) ? '' :
-    '正解済み ' + d + ' / ' + BANK.length + '問（出題されません）・苦手 ' + w + '問（「苦手だけ」で出題）';
+  bank.forEach((q) => { if (stOf(q) === '') { cnt[q.c]++; cnt.all++; } });
+  const w = bank.filter(isWeak).length;
+  const d = bank.filter(isDone).length;
+  setText($('#doneNote'), (d === 0 && w === 0) ? '' :
+    '正解済み ' + d + ' / ' + bank.length + '問（出題されません）・苦手 ' + w + '問（「苦手だけ」で出題）');
   $('#resetBtn').hidden = (d === 0);
-  $('#totalCount').textContent = BANK.length;
+  $('#totalCount').textContent = bank.length;
+  LEVELS.forEach((l) => { $('#c-lv-' + l.k).textContent = lvBank(l.k).length; });
   $('#c-all').textContent = cnt.all;
   $('#c-on').textContent = cnt.on;
   $('#c-kun').textContent = cnt.kun;
@@ -1011,25 +1997,26 @@ function refreshCounts() {
   const wr = $('#weakRadio');
   wr.disabled = (w === 0);
   if (w === 0 && wr.checked) document.querySelector('input[name=scope][value=all]').checked = true;
+  applyLevelUI();
   refreshTransfer();
 }
 
 function buildPool() {
   const scope = document.querySelector('input[name=scope]:checked').value;
   const n = document.querySelector('input[name=count]:checked').value;
-  let pool = BANK.filter((q) => scope === 'weak' ? isWeak(q) : (stOf(q) === '' && (scope === 'all' || q.c === scope)));
+  let pool = BANK.filter((q) => q.lv === curLv && (scope === 'weak' ? isWeak(q) : (stOf(q) === '' && (scope === 'all' || q.c === scope))));
   if ($('#shuffle').checked) pool = shuffleArr(pool);
   if (n !== 'all') pool = pool.slice(0, parseInt(n, 10));
   return pool;
 }
 
 /* ================= テスト画面 ================= */
-function showStartMsg(t) { const m = $('#startMsg'); m.textContent = t; m.hidden = false; }
+function showStartMsg(t) { const m = $('#startMsg'); setText(m, t); m.hidden = false; }
 function emptyPoolMsg() {
   const scope = document.querySelector('input[name=scope]:checked').value;
   if (scope === 'weak') return '苦手の問題はありません。';
-  return 'この範囲に、まだ出題していない問題はありません。' +
-    (BANK.some(isWeak) ? '「苦手だけ」で、まちがえた問題を復習できます。' : '範囲を変えるか、正解済みの記録をリセットしてください。');
+  return 'この級のこの範囲に、まだ出題していない問題はありません。' +
+    (lvBank(curLv).some(isWeak) ? '「苦手だけ」で、まちがえた問題を復習できます。' : '範囲や級を変えるか、正解済みの記録をリセットしてください。');
 }
 function startTest(list) {
   if (!list.length) { showStartMsg(emptyPoolMsg()); return; }
@@ -1131,10 +2118,11 @@ function renderResult() {
   const res = state.res, total = res.length;
   const ok = res.filter((r) => r.ok).length;
   const pct = total ? Math.round(ok / total * 100) : 0;
+  const L = LV[curLv];
   let msg;
   if (pct >= 90) msg = 'ほぼ満点です。この調子で範囲を広げましょう。';
-  else if (pct >= 80) msg = '合格の目安（正答率およそ80%）に届いています。';
-  else if (pct >= 60) msg = 'あと少しです。まちがえた問題を復習しましょう。';
+  else if (pct >= L.pass) msg = '合格の目安（正答率およそ' + L.pass + '%）に届いています。';
+  else if (pct >= L.pass - 20) msg = 'あと少しです。まちがえた問題を復習しましょう。';
   else msg = 'まずはまちがえた問題から、くり返し解きましょう。';
 
   const sum = $('#summary');
@@ -1154,10 +2142,11 @@ function renderResult() {
   score.append(svg, num);
   sum.append(score);
   sum.append(el('p', 'pct', '正答率 ' + pct + '%'));
-  sum.append(el('p', '', msg));
-  sum.append(el('p', 'small', '漢検2級の合格目安は、全体の得点率およそ80%です。'));
-  const lc = localCounts();
-  sum.append(el('p', 'small', '正解済み ' + lc.d + ' / ' + BANK.length + '問・苦手 ' + lc.w + '問。正解した問題は出題されません。まちがえた問題は「苦手だけ」で復習できます。'));
+  sum.append(el('p', 'ph', msg));
+  sum.append(el('p', 'small ph', '漢検' + L.name + 'の合格目安は、全体の得点率およそ' + L.pass + '%です。'));
+  const lc = localCounts(curLv);
+  sum.append(el('p', 'small ph', L.name + 'の記録：正解済み ' + lc.d + ' / ' + lvBank(curLv).length + '問・苦手 ' + lc.w + '問。正解した問題は出題されません。まちがえた問題は「苦手だけ」で復習できます。'));
+  sum.querySelectorAll('.ph').forEach(phrasify);
   try { const len = Math.ceil(path.getTotalLength()); path.style.strokeDasharray = len; path.style.setProperty('--len', len); } catch (e) { /* アニメ省略 */ }
 
   $('#onlyWrong').checked = false;
@@ -1219,36 +2208,62 @@ $('#againBtn').addEventListener('click', () => {
 let resetTimer = null;
 $('#resetBtn').addEventListener('click', () => {
   const b = $('#resetBtn');
+  const label = 'この級の正解済みの記録をリセット';
   if (b.dataset.armed === '1') {
-    clearTimeout(resetTimer); b.dataset.armed = ''; b.textContent = '正解済みの記録をリセット';
-    Array.from(rec.keys()).forEach((k) => { if (rec.get(k).s === 'd') rec.delete(k); });
+    clearTimeout(resetTimer); b.dataset.armed = ''; b.textContent = label;
+    BANK.forEach((q) => { if (q.lv === curLv && isDone(q)) rec.delete(q.s); });
     saveRec(); $('#startMsg').hidden = true; refreshCounts(); return;
   }
-  b.dataset.armed = '1'; b.textContent = 'もう一度押すと、正解済みがすべて未出題に戻ります';
-  resetTimer = setTimeout(() => { b.dataset.armed = ''; b.textContent = '正解済みの記録をリセット'; }, 3500);
+  b.dataset.armed = '1'; b.textContent = 'もう一度押すと、この級の正解済みが未出題に戻ります';
+  resetTimer = setTimeout(() => { b.dataset.armed = ''; b.textContent = label; }, 3500);
 });
 $('#homeBtn').addEventListener('click', () => { refreshCounts(); show('start'); });
+document.querySelectorAll('input[name=level]').forEach((r) => {
+  r.addEventListener('change', () => {
+    if (!r.checked) return;
+    curLv = r.value;
+    lsSet(LVK, curLv);
+    $('#startMsg').hidden = true;
+    refreshCounts();
+  });
+});
 
 /* ================= 記録の引き継ぎ（画面） ================= */
 const xfer = $('#xfer'), expCode = $('#expCode'), expInfo = $('#expInfo'), copyBtn = $('#copyBtn'), copyMsg = $('#copyMsg');
 const impCode = $('#impCode'), impInfo = $('#impInfo'), mergeBtn = $('#mergeBtn'), replaceBtn = $('#replaceBtn');
+const expBoxes = Array.from(document.querySelectorAll('.expLv'));
 const ERR = {
-  format: 'このコードは読み取れません。「kk2.1.」で始まる引き継ぎコードを、最後まで貼り付けてください。',
+  format: 'このコードは読み取れません。「kk3.」で始まる引き継ぎコードを、最後まで貼り付けてください。',
   broken: 'コードが途中で切れているか、文字が欠けています。書き出し側でもう一度コピーして、全体を貼り付けてください。',
   version: 'このコードは、このテストより新しい形式のため読み込めません。'
 };
 let impParsed = null, replaceTimer = null;
 
+function selectedLevels() {
+  const set = new Set();
+  expBoxes.forEach((b) => { if (b.checked) set.add(b.value); });
+  return set;
+}
 function refreshExport() {
-  const b = buildCode();
   copyMsg.textContent = '';
+  copyMsg.className = 'info ph';
+  LEVELS.forEach((l) => { const c = localCounts(l.k); $('#e-' + l.k).textContent = '（正解済み ' + c.d + '・苦手 ' + c.w + '）'; });
+  const sel = selectedLevels();
+  if (!sel.size) {
+    expCode.value = '';
+    setText(expInfo, '書き出す級を選んでください。');
+    copyBtn.disabled = true;
+    return;
+  }
+  const b = buildCode(sel);
   if (b.nd + b.nw === 0) {
     expCode.value = '';
-    expInfo.textContent = 'まだ記録がありません。テストを解くと、ここに引き継ぎコードができます。';
+    setText(expInfo, '選んだ級には、まだ記録がありません。テストを解くと、ここに引き継ぎコードができます。');
     copyBtn.disabled = true;
   } else {
     expCode.value = b.code;
-    expInfo.textContent = '正解済み ' + b.nd + '問・苦手 ' + b.nw + '問の記録です（' + b.code.length + '文字）。';
+    setText(expInfo, '正解済み ' + b.nd + '問・苦手 ' + b.nw + '問の記録です（' + b.code.length + '文字）。' +
+      (b.code.length > 3000 ? 'コードが長いときは、書き出す級を分けると短くなります。' : ''));
     copyBtn.disabled = false;
   }
 }
@@ -1267,32 +2282,36 @@ function updateImport() {
   impParsed = null;
   mergeBtn.disabled = true;
   replaceBtn.disabled = true;
-  impInfo.className = 'info';
+  impInfo.className = 'info ph';
   if (!impCode.value.trim()) { impInfo.textContent = ''; return; }
   const r = parseCode(impCode.value);
-  if (r.err) { impInfo.className = 'info warn'; impInfo.textContent = ERR[r.err]; return; }
+  if (r.err) { impInfo.className = 'info warn ph'; setText(impInfo, ERR[r.err]); return; }
   if (!r.items.length) {
-    impInfo.className = 'info warn';
-    impInfo.textContent = r.unknown ? 'このコードの記録は、いまのテストにない問題のものです。読み込めません。' : '記録が入っていないコードです。';
+    impInfo.className = 'info warn ph';
+    setText(impInfo, r.unknown ? 'このコードの記録は、いまのテストにない問題のものです。読み込めません。' : '記録が入っていないコードです。');
     return;
   }
   impParsed = r;
-  const c = localCounts();
-  impInfo.textContent = 'コードの内容：正解済み ' + r.nd + '問・苦手 ' + r.nw + '問。この端末の今の記録：正解済み ' + c.d + '問・苦手 ' + c.w + '問。' +
-    (r.unknown ? '（' + r.unknown + '件は、いまのテストにない問題なので無視します）' : '');
+  const inMask = LEVELS.filter((l) => r.mask & l.bit);
+  const parts = inMask.map((l) => l.name + '（正解済み ' + r.by[l.k].d + '・苦手 ' + r.by[l.k].w + '）');
+  let ld = 0, lw = 0;
+  inMask.forEach((l) => { const c = localCounts(l.k); ld += c.d; lw += c.w; });
+  setText(impInfo, 'コードの内容：' + parts.join('、') + '。同じ級のこの端末の今の記録：正解済み ' + ld + '問・苦手 ' + lw + '問。' +
+    (r.unknown ? '（' + r.unknown + '件は、対応する問題がないので無視します）' : '') +
+    '「置き換え」は、' + inMask.map((l) => l.name).join('・') + 'の今の記録だけを入れ替えます。');
   mergeBtn.disabled = false;
   replaceBtn.disabled = false;
 }
 function doImport(mode) {
   if (!impParsed) return;
-  const res = applyImport(impParsed.items, mode);
+  const res = applyImport(impParsed, mode);
   impCode.value = '';
   updateImport();
   refreshCounts();
   const c = localCounts();
-  impInfo.className = 'info okmsg';
-  impInfo.textContent = (mode === 'replace' ? '置き換えました。' : '統合して読み込みました（新規 ' + res.added + '問・更新 ' + res.updated + '問）。') +
-    'いまの記録：正解済み ' + c.d + '問・苦手 ' + c.w + '問。';
+  impInfo.className = 'info okmsg ph';
+  setText(impInfo, (mode === 'replace' ? '置き換えました。' : '統合して読み込みました（新規 ' + res.added + '問・更新 ' + res.updated + '問）。') +
+    'いまの記録（全級）：正解済み ' + c.d + '問・苦手 ' + c.w + '問。');
 }
 async function copyText(text, ta) {
   try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(text); return true; } } catch (e) { /* 次の方法へ */ }
@@ -1304,12 +2323,13 @@ expCode.addEventListener('focus', () => { expCode.select(); });
 expCode.addEventListener('click', () => { expCode.select(); });
 copyBtn.addEventListener('click', async () => {
   const ok = await copyText(expCode.value, expCode);
-  copyMsg.className = ok ? 'info okmsg' : 'info warn';
-  copyMsg.textContent = ok ? 'コピーしました。別の端末の「読み込む」欄に貼り付けてください。'
-                           : '自動でコピーできませんでした。コードを選択した状態にしたので、長押し（パソコンは Ctrl+C）でコピーしてください。';
+  copyMsg.className = ok ? 'info okmsg ph' : 'info warn ph';
+  setText(copyMsg, ok ? 'コピーしました。別の端末の「読み込む」欄に貼り付けてください。'
+                      : '自動でコピーできませんでした。コードを選択した状態にしたので、長押し（パソコンは Ctrl+C）でコピーしてください。');
   if (!ok) { expCode.focus(); expCode.select(); }
 });
 impCode.addEventListener('input', updateImport);
+expBoxes.forEach((b) => b.addEventListener('change', refreshExport));
 mergeBtn.addEventListener('click', () => doImport('merge'));
 replaceBtn.addEventListener('click', () => {
   if (!impParsed) return;
@@ -1323,6 +2343,7 @@ window.addEventListener('storage', (e) => {
   if (e.key === RK || e.key === null) { rec = loadRec(); refreshCounts(); }
 });
 
+document.querySelectorAll('.ph').forEach(phrasify);
 refreshCounts();
 })();
 </script>
